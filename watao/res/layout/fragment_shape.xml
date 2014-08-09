@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:GLView="http://schemas.android.com/apk/res/org.zju.cadcg.watao"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ShapeActivity" >
+
+    <org.zju.cadcg.watao.gl.GLView
+        android:id="@+id/pottery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        GLView:background="@drawable/main_activity_background"
+        GLView:is_transparent="false"
+        GLView:mode="view"
+        GLView:offset="0.3" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:src="@color/transparent" />
+
+    <LinearLayout
+        android:id="@+id/main_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="3" >
+
+            <ImageButton
+                android:id="@+id/market_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/market_button"
+                android:contentDescription="@null"
+                android:scaleType="fitXY" />
+
+            <ImageButton
+                android:id="@+id/account_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/collect_button_home"
+                android:contentDescription="@null"
+                android:scaleType="fitXY" />
+
+            <ImageButton
+                android:id="@+id/inf_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginBottom="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/inf_button"
+                android:contentDescription="@null"
+                android:scaleType="fitXY" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/v_line"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/line_v" />
+
+        <ImageButton
+            android:id="@+id/create_button"
+            android:layout_width="100dp"
+            android:layout_height="133dp"
+            android:background="@drawable/create_button"
+            android:contentDescription="@null"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/logo"
+        android:contentDescription="@null"
+        android:scaleType="fitXY" />
+
+    <LinearLayout
+        android:id="@+id/menu_bar"
+        android:layout_width="50dp"
+        android:layout_height="187dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/transparent"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/back_to_home_page_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/homepage" />
+
+        <ImageButton
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/reset" />
+
+        <ImageButton
+            android:id="@+id/classic_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/classic" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:layout_alignParentBottom="true"
+      	android:layout_alignParentRight="true"
+      	android:layout_marginBottom="20dp"
+      	android:layout_marginRight="20dp"
+        android:src="@drawable/next" />
+
+    <RelativeLayout
+        android:id="@+id/choose_classic"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="fill_parent"
+        android:layout_height="500.0dip"
+        android:background="@drawable/choose_classic_bg" >
+
+        <ImageButton
+            android:id="@+id/choose_classic_cancle_button"
+            android:layout_width="80.0dip"
+            android:layout_height="40.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10.0dip"
+            android:layout_marginTop="10.0dip"
+            android:background="@drawable/choose_classic_cancle"
+            android:contentDescription="@null"
+            android:paddingLeft="20dp" />
+
+        <GridView
+            android:id="@+id/classicSample"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/choose_classic_cancle_button"
+            android:layout_marginTop="7.0dp"
+            android:gravity="fill"
+            android:horizontalSpacing="10.0dp"
+            android:listSelector="@null"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:verticalSpacing="22.0dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

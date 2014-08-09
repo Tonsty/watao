@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:GLView="http://schemas.android.com/apk/res/org.zju.cadcg.watao"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <org.zju.cadcg.watao.gl.GLView
+        android:id="@+id/pottery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        GLView:background="@drawable/decorate_background"
+        GLView:mode="derocate" >
+    </org.zju.cadcg.watao.gl.GLView>
+
+    <RadioGroup
+        android:id="@+id/decorate_type"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/decorate_shelf_up"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp" >
+
+        <RadioButton
+            android:id="@+id/decorate_type_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/decorate_teye_right"
+            android:button="@null"
+            android:contentDescription="@null"
+            android:gravity="center"
+            android:text="古朴" />
+
+        <RadioButton
+            android:id="@+id/decorate_type_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/decorate_type_center"
+            android:button="@null"
+            android:contentDescription="@null"
+            android:gravity="center"
+            android:text="典雅" />
+
+        <RadioButton
+            android:id="@+id/decorate_type_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/decorate_type_center"
+            android:button="@null"
+            android:contentDescription="@null"
+            android:gravity="center"
+            android:text="抽象" />
+
+        <RadioButton
+            android:id="@+id/decorate_type_4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/decorate_teye_left"
+            android:button="@null"
+            android:contentDescription="@null"
+            android:gravity="center"
+            android:text="自拍" />
+    </RadioGroup>
+
+    <HorizontalScrollView
+        android:id="@+id/decorator_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/decorate_type"
+        android:background="@drawable/decorate_shelf_down"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/decorator"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingTop="2dp" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <ImageButton
+        android:id="@+id/back_to_home_page_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/decorator_scrollView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/earlier_btn" />
+
+    <ToggleButton
+        android:id="@+id/erase"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/decorator_scrollView"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/clear"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:textOff="@null"
+        android:textOn="@null" />
+
+    <ImageButton
+        android:id="@+id/next"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/begin_fire" />
+
+</RelativeLayout>

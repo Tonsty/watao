@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/buy_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="填写订单"
+            android:textColor="@android:color/black"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/buy_title" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buy_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="30dp"
+            android:paddingTop="40dp" >
+
+            <RelativeLayout
+                android:id="@+id/buy_mail"
+                android:layout_width="120dp"
+                android:layout_height="160dp"
+                android:padding="10dp"
+                android:background="@drawable/buy_mail"
+                android:layout_alignParentRight="true" >
+
+                <TextView
+                    android:id="@+id/buy_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="￥156"
+                    android:textColor="@color/red"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/buy_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/buy_price"
+                    android:contentDescription="@null"
+                    android:scaleType="centerInside" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/buy_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/buy_mail"
+                android:layout_alignRight="@id/buy_mail"
+                android:layout_marginBottom="-20dp"
+                android:layout_marginRight="40dp"
+                android:contentDescription="@null"
+                android:src="@drawable/buy_watao" /> 
+
+             <EditText
+                 android:id="@+id/buy_name"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignTop="@id/buy_mail"
+                 android:layout_marginRight="20dp"
+                 android:layout_toLeftOf="@id/buy_mail"
+                 android:hint="姓名"
+                 android:textColor="@android:color/black"
+                 android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/buy_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_name"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="35dp"
+                android:layout_toLeftOf="@id/buy_mail"
+                android:hint="电话"
+                android:inputType="phone"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/buy_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_phone"
+                android:layout_marginTop="35dp"
+                android:gravity="top|left"
+                android:hint="收件地址"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                android:minLines="3"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/buy_code"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_address"
+                android:layout_marginTop="35dp"
+                android:hint="邮编"
+                android:inputType="number"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/buy_work"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_code"
+                android:layout_marginTop="35dp"
+                android:hint="作品名称（请给您的大作命名）"
+                android:inputType="text"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/buy_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_work"
+                android:layout_marginTop="35dp"
+                android:gravity="top|left"
+                android:hint="备注"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                android:minLines="5"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/buy_submit"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_remark"
+                android:background="@drawable/buy_submit"
+                android:layout_centerHorizontal="true" /> 
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

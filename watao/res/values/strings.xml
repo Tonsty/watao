@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">哇陶创意工坊</string>
+    <string name="idea_market">创意市场</string>
+    <string name="my_watao">我的哇陶</string>
+    <string name="email">email:XXXXXX@XX.XXX</string>
+    <string name="point">积分:1000</string>
+    <string name="idea_market_introduce">聚集了景德镇小店金牌推荐的陶瓷，以及用户制作的优秀作品</string>
+    <string name="begin_fire_text">开始素烧</string>
+    <string name="refer_pattern_text">参考样本</string>
+    <string name="ok_text">确定</string>
+    <string name="choose_sample_hint_text">完成样本可以获取一定的积分哦</string>
+    <string name="b_W_decorate_text">青花瓷</string>
+    <string name="color_derorate_text">颜色釉瓷</string>
+    <string name="you_decorate_text">釉上彩瓷</string>
+    <string name="complete_text">完成</string>
+    <string name="redo_text">下一步</string>
+    <string name="undo_text">上一步</string>
+    <string name="buy_text">购买</string>
+    <string name="share_text">分享</string>
+    <string name="sell_text">寄卖</string>
+    <string name="price">市值￥300</string>
+    <string name="fire_success">青花瓷烧制成功！</string>
+    <string name="receiver">收件人：廖泽宇</string>
+    <string name="buy_num">购买数量：</string>
+    <string name="send_way_text">配送方式：</string>
+    <string name="send_way">申通快递  免邮 ></string>
+    <string name="hint_message">给卖家留言~~</string>
+    <string name="confirm_buy_text">确定,支付宝支付</string>
+    <string name="search">搜索</string>
+    <string name="pottery_size">尺寸</string>
+    <string name="pottery_detail">商品详情</string>
+    <string name="buy_immediately">立即购买</string>
+    <string name="add_to_carrier">加入购物车</string>
+    <string name="click_to_look">点击查看</string>
+    <string name="receive">领取</string>
+    <string name="account">账号管理</string>
+    <string name="help">使用帮助</string>
+    <string name="fed_back">用户反馈</string>
+    <string name="grade">给我评分</string>
+    <string name="about_us">关于我们</string>
+    <string name="quit">退出当前账号</string>
+    <string name="head_sculpture">头像</string>
+    <string name="nickname">昵称：用户第三方账号昵称</string>
+    <string name="contact_inf">联系方式</string>
+    <string name="phone">电话：18667160595</string>
+    <string name="address">收货地址</string>
+    <string name="pay_way">收款方式</string>
+    <string name="card_num">建设银行             6556 **** **** **** 136</string>
+    <string name="custom_tishi">您添入的自拍头像图案在制作时将简单素描化处理，您可以用类似魔漫、脸萌等加工的图案，或者五个汉字、十个字母内的文本作为图案，其他较为简单的图案也可，由于是纯手工仿制您提供的图案费用也会偏高，本贴图呈现效果仅为参考效果。</string>
+
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ShapeActivity" >
+
+    <fragment
+        android:id="@+id/shape_fragment"
+        android:name="org.zju.cadcg.watao.fragment.ShapeFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/choose_fragment"
+        android:name="org.zju.cadcg.watao.fragment.ChooseFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    
+    <ImageView
+        android:id="@+id/splash_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/splash_screen" />
+
+</FrameLayout>

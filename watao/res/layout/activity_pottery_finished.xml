@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE project>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:GLView="http://schemas.android.com/apk/res/org.zju.cadcg.watao"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <org.zju.cadcg.watao.gl.GLView
+        android:id="@+id/pottery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        GLView:background="@drawable/pottery_finished_activity_background"
+        GLView:mode="interact" >
+    </org.zju.cadcg.watao.gl.GLView>
+
+    <LinearLayout
+        android:id="@+id/menu_bar"
+        android:layout_width="50dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:background="@color/transparent"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/back_to_home_page_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:background="@drawable/homepage"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/share_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:background="@drawable/share"
+            android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/buy_button"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:background="@drawable/buy" />
+        
+        <ToggleButton
+            android:id="@+id/take_photo"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textOn="@null"
+            android:textOff="@null"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:background="@drawable/collect_button" />
+        
+               
+    </LinearLayout>
+    
+ <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+               android:background="@drawable/down"
+            android:layout_marginLeft="20dp">
+        
+               
+
+            <ImageView
+                android:id="@+id/height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/height"
+                android:contentDescription="@null"
+                android:gravity="center" />
+            
+            <ImageView
+                android:id="@+id/width"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/width"
+                android:contentDescription="@null"
+                android:gravity="center" />
+    
+            
+        </LinearLayout>
+    
+    
+</RelativeLayout>
