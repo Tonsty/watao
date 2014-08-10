@@ -6,19 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ShapeActivity" >
-
-    <fragment
-        android:id="@+id/shape_fragment"
-        android:name="org.zju.cadcg.watao.fragment.ShapeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <fragment
-        android:id="@+id/choose_fragment"
-        android:name="org.zju.cadcg.watao.fragment.ChooseFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
     
+    <FrameLayout 
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        
+    </FrameLayout>
+        
     <ImageView
         android:id="@+id/splash_image"
         android:layout_width="match_parent"

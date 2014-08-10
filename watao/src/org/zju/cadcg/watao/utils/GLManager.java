@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.zju.cadcg.watao.R;
 import org.zju.cadcg.watao.Watao;
 import org.zju.cadcg.watao.activity.DecorateActivity;
+import org.zju.cadcg.watao.activity.ShapeActivity;
 import org.zju.cadcg.watao.gl.Shadow;
 import org.zju.cadcg.watao.gl200.Background200;
 import org.zju.cadcg.watao.gl200.Fire;
@@ -22,7 +23,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.preference.PreferenceManager;
-import android.text.method.MovementMethod;
 
 public class GLManager {
 
@@ -65,6 +65,7 @@ public class GLManager {
 	
 		WTShader.initVBO();
 		alreadyInitGL = true;
+		
 	}
 	
 	public static void changeFrustum(int width, int height) {

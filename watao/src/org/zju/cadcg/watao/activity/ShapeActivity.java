@@ -1,12 +1,8 @@
 package org.zju.cadcg.watao.activity;
 
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.app.Activity;
 import android.content.Intent;
 
@@ -14,9 +10,7 @@ import org.zju.cadcg.watao.R;
 import org.zju.cadcg.watao.Watao;
 import org.zju.cadcg.watao.fragment.ChooseFragment;
 import org.zju.cadcg.watao.fragment.ShapeFragment;
-import org.zju.cadcg.watao.type.WTMode;
 import org.zju.cadcg.watao.utils.GLManager;
-import org.zju.cadcg.watao.utils.PotteryTextureManager;
 
 public class ShapeActivity extends Activity {
 	private ShapeFragment shapeFragment;
@@ -37,39 +31,52 @@ public class ShapeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shape);
-		shapeFragment = (ShapeFragment) getFragmentManager().findFragmentById(R.id.shape_fragment);
-		chooseFragment = (ChooseFragment) getFragmentManager().findFragmentById(R.id.choose_fragment);
+		//get view
+//		shapeFragment = (ShapeFragment) getFragmentManager().findFragmentById(R.id.shape_fragment);
+//		chooseFragment = (ChooseFragment) getFragmentManager().findFragmentById(R.id.choose_fragment);
 		splashView = findViewById(R.id.splash_image);
 		
-		getFragmentManager().beginTransaction().hide(chooseFragment).commit();
+		//hide the choose fragment
+//		getFragmentManager().beginTransaction().hide(chooseFragment).commit();
+		
+		//init the gl Object when the splash view is show
+		new Thread(new Runnable() {
+
+			public void run() {
+				//init fragment
+				shapeFragment = new ShapeFragment();
+				chooseFragment = new ChooseFragment();
+				GLManager.init(getApplicationContext());
+				getFragmentManager().beginTransaction().replace(R.id.fragment_container, shapeFragment).commit();
+			}
+		}).start();
 		
 		new Thread(new Runnable() {
 
 			public void run() {
-				GLManager.init(getApplicationContext());
-//				PotteryTextureManager.setBaseTexture(getResources(), R.drawable.clay);
-				GLManager.background.setTexture(ShapeActivity.this, R.drawable.main_activity_background);
-				GLManager.table.setTexture(ShapeActivity.this, R.drawable.table);
-				GLManager.shadow.setTexture(ShapeActivity.this, R.drawable.shadow);
-				shapeFragment.getGLView().onResume();
-				while(!GLManager.isDrawed || !GLManager.alreadyInitGL){
+				while (!GLManager.isDrawed) {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				shapeFragment.glManagerResume();
-				final Animation animation = new AlphaAnimation(1, 0);
-				animation.setDuration(1000);
-				ShapeActivity.this.runOnUiThread(new Runnable() {
-					public void run() {
-						splashView.startAnimation(animation);
-						splashView.setVisibility(View.GONE);
-					}
-				});
+				hideSplash();
 			}
 		}).start();
+	}
+	
+	public void hideSplash() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				System.out
+						.println("ShapeActivity.hideSplash().new Runnable() {...}.run()");
+				splashView.animate().alpha(0).setDuration(1000).start();
+				splashView.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	@Override

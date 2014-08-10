@@ -37,8 +37,8 @@ public class GLView extends GLSurfaceView {
 	 */
 	protected GLRenderer renderer;
 	
-	public GLRenderer200 getMyRenderer(){
-		return (GLRenderer200) renderer;
+	public GLRenderer getMyRenderer(){
+		return renderer;
 	}
 
 	/**

@@ -76,24 +76,29 @@ public class ShapeFragment extends Fragment {
 			Bundle savedInstanceState) {
 		//initialize for home page
 		mode = WTMode.VIEW;
+		
+		//init the glview
 		View view = inflater.inflate(R.layout.fragment_shape, null);
 		glView = (GLView)view.findViewById(R.id.pottery);
-		glView.onPause();
-		GLManager.alreadyInitGL = false;
-		
+		//set on touch click 
 		glView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, final MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					System.err.println(GLManager.hasUncomplete);
+					if (GLManager.hasUncomplete == 1) {
+						
+					}else if(GLManager.hasUncomplete == 2){
+						
+					}else{
+						
+					}
 					if (GLManager.hasUncomplete == 2) {
 						Intent intent = new Intent(getActivity(), DecorateActivity.class);
 						intent.putExtra("fromUncomplete", true);
 						if (GLManager.decoratorTypeUn == DecorateActivity.QINGHUA) {
 							intent.putExtra("type", DecorateActivity.QINGHUA);
 						}else{
-
 							intent.putExtra("type", DecorateActivity.YOUSHANGCAI);
 						}
 						Watao.pauseBGM();
@@ -177,16 +182,6 @@ public class ShapeFragment extends Fragment {
 		gridView.setOnItemClickListener(new GridViewChooseListener(this));
 
 		chooseClassicView = view.findViewById(R.id.choose_classic);
-
-		chooseClassicView.post(new Runnable() {
-
-			@Override
-			public void run() {
-				int height = chooseClassicView.getHeight();
-				chooseClassicView.setTag(height);
-				((RelativeLayout.LayoutParams) chooseClassicView.getLayoutParams()).topMargin = -height;
-			}
-		});
 		
 		final GestureDetector gd = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener(){
 			@Override
@@ -228,7 +223,7 @@ public class ShapeFragment extends Fragment {
 		});	
 		
 		shapeMenuBar = view.findViewById(R.id.menu_bar);
-
+		glManagerResume();
 		return view;
 	}
 	
@@ -326,14 +321,16 @@ public class ShapeFragment extends Fragment {
 	}
 	
 	private void showClassic() {
-		int height = (Integer) chooseClassicView.getTag();
-		Animation animation = new TranslateAnimation(0, 0, -height, 0);
-		animation.setDuration(500);
-		animation.setInterpolator(new AccelerateDecelerateInterpolator());
-		chooseClassicView.startAnimation(animation);
-		LayoutParams layoutParams = (RelativeLayout.LayoutParams)chooseClassicView.getLayoutParams();
-		layoutParams.topMargin = 0;
-		chooseClassicView.setLayoutParams(layoutParams);
+//		int height = (Integer) chooseClassicView.getTag();
+//		Animation animation = new TranslateAnimation(0, 0, -height, 0);
+//		animation.setDuration(500);
+//		animation.setInterpolator(new AccelerateDecelerateInterpolator());
+//		chooseClassicView.startAnimation(animation);
+//		LayoutParams layoutParams = (RelativeLayout.LayoutParams)chooseClassicView.getLayoutParams();
+//		layoutParams.topMargin = 0;
+//		chooseClassicView.setLayoutParams(layoutParams);
+		
+		chooseClassicView.animate().translationYBy(-500 * Watao.density).setDuration(500).start();
 		classicIsShowed = true;
 	}
 
@@ -535,19 +532,21 @@ public class ShapeFragment extends Fragment {
 	public void hideClassic() {
 		final int height = (Integer) chooseClassicView.getTag();
 		
-		ValueAnimator animator = ValueAnimator.ofInt(0,100);
-		animator.addUpdateListener(new AnimatorUpdateListener() {
-			private IntEvaluator mEvaluator = new IntEvaluator();
-
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation) {
-				int currentValue = (int) animation.getAnimatedValue();
-				float fraction = currentValue / 100.0f;
-				((LayoutParams)chooseClassicView.getLayoutParams()).topMargin = mEvaluator.evaluate(fraction,0,-height);
-				chooseClassicView.requestLayout();
-			}
-		});
-		animator.setDuration(500).start();
+//		ValueAnimator animator = ValueAnimator.ofInt(0,100);
+//		animator.addUpdateListener(new AnimatorUpdateListener() {
+//			private IntEvaluator mEvaluator = new IntEvaluator();
+//
+//			@Override
+//			public void onAnimationUpdate(ValueAnimator animation) {
+//				int currentValue = (int) animation.getAnimatedValue();
+//				float fraction = currentValue / 100.0f;
+//				((LayoutParams)chooseClassicView.getLayoutParams()).topMargin = mEvaluator.evaluate(fraction,0,-height);
+//				chooseClassicView.requestLayout();
+//			}
+//		});
+//		animator.setDuration(500).start();
+		
+		chooseClassicView.animate().translationYBy(500 * Watao.density).setDuration(500).start();
 		classicIsShowed = false;
 	}
 	
