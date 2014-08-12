@@ -125,12 +125,16 @@ public class DecorateActivity extends Activity {
 		eraseButton = (ToggleButton)findViewById(R.id.erase);
 		eraseButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					currentView.setBackgroundResource(R.drawable.decorate_block);
+					oldWidth = PotteryTextureManager.currentDecorater.getWidth();
+					PotteryTextureManager.currentDecorater.setWidth(0.05f);
 				}else{
 					currentView.setBackgroundResource(R.drawable.decorate_block_choosed);
+					PotteryTextureManager.currentDecorater.setWidth(oldWidth);
 				}
 				PotteryTextureManager.isEraseMode = isChecked;
 			}
@@ -145,6 +149,7 @@ public class DecorateActivity extends Activity {
 		decoratorTypes = findViewById(R.id.decorate_type);
 		decoratorDisplayScrollView = findViewById(R.id.decorator_scrollView);
 	}
+	private float oldWidth;
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -514,8 +519,8 @@ public class DecorateActivity extends Activity {
 	public static Integer[] qinghuaAfterId = new Integer[]{R.drawable.q13a, R.drawable.q21a, R.drawable.q345a, R.drawable.q44a, R.drawable.q535a, R.drawable.q645a, R.drawable.q74a};
 	private float[] qinghuaWidthId = new float[]{0.375f,0.125f,0.5625f,0.5f,0.4375f,0.5625f,0.5f};
 	
-	public static Integer[] youshang = new Integer[]{R.drawable.y1, R.drawable.y2, R.drawable.y3, R.drawable.y4};
-	private float[] youshangWidthId = new float[]{0.2f,0.3f,0.1f,0.4f};
+	public static Integer[] youshang = new Integer[]{R.drawable.y1, R.drawable.y2, R.drawable.y3, R.drawable.y4, R.drawable.y543, R.drawable.y626};
+	private float[] youshangWidthId = new float[]{0.2f,0.3f,0.1f,0.4f, 0.5375f, 0.325f};
 	
 	private static List<String> customerId = new ArrayList<String>();
 	
@@ -525,6 +530,11 @@ public class DecorateActivity extends Activity {
 
 
 	public void setDecorator(WTDecorateTypeEnum bw) {
+		if (bw == WTDecorateTypeEnum.CUSTOM) {
+			PotteryTextureManager.needP = true;
+		}else{
+			PotteryTextureManager.needP = false;
+		}
 		if (bw == WTDecorateTypeEnum.CUSTOM) {
 			
 			int needImageView = customerId.size() + 1;
@@ -646,10 +656,10 @@ public class DecorateActivity extends Activity {
 //			opts.inSampleSize = factor;
 //			opts.inJustDecodeBounds = false;
 //			Bitmap bitmap =	BitmapFactory.decodeByteArray(data, 0, data.length, opts);
-			Bitmap bitmap2 = Bitmap.createBitmap(bitmap.getWidth() * 4, bitmap.getHeight(), Config.ARGB_8888);
+			Bitmap bitmap2 = Bitmap.createBitmap(bitmap.getWidth() * 8, bitmap.getHeight(), Config.ARGB_8888);
 			bitmap2.eraseColor(Color.TRANSPARENT);
 			Canvas c = new Canvas(bitmap2);
-			c.drawBitmap(bitmap, bitmap.getWidth()*1.5f, 0, null);
+			c.drawBitmap(bitmap, bitmap.getWidth()*3.5f, 0, null);
 			bitmap.recycle();
 			c.save(Canvas.ALL_SAVE_FLAG);
 			c.restore();
@@ -665,6 +675,7 @@ public class DecorateActivity extends Activity {
 			decorator.idAfter = decorator.idBefore = id;
 			decorator.setWidth(0.6f);
 			changeImageView(decoratorImageView, decorator);
+			switchDecorate(decoratorViews.get(0));
 
 			PotteryTextureManager.currentDecorater = decorator;
 

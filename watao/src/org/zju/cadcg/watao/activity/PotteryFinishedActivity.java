@@ -37,6 +37,8 @@ import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -202,17 +204,58 @@ public class PotteryFinishedActivity extends Activity {
 		});
 		
 	
-		ImageView width = (ImageView) findViewById(R.id.width);
+		final ImageView width = (ImageView) findViewById(R.id.width);
 		int widthF = (int) GLManager.pottery.getMaxWidth();
 		Bitmap bitmapWidth = NumberUntil.getNumberBitmapI(this, widthF);
 		width.setImageBitmap(bitmapWidth);
 		
-		ImageView height = (ImageView) findViewById(R.id.height);
+		final ImageView height = (ImageView) findViewById(R.id.height);
 		int heightF = (int) GLManager.pottery.getHeightReal();
 		Bitmap bitmapHeight = NumberUntil.getNumberBitmapI(this, heightF);
 		height.setImageBitmap(bitmapHeight);
 		
+		//init seekbar
+		SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
+		oldProgress = (int) (heightF/24f*100);
+		seekBar.setProgress(oldProgress);
+		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				float heightF = progress/100f*24;
+				if (heightF < 5) {
+					seekBar.setProgress(oldProgress);
+					return;
+				}
+				float widthF = 0;
+				widthF = GLManager.pottery.getWidth(heightF);
+				if (widthF == 0) {
+					seekBar.setProgress(oldProgress);
+					return;
+				}
+				Bitmap bitmapheight = NumberUntil.getNumberBitmapI(PotteryFinishedActivity.this, (int) heightF);
+				height.setImageBitmap(bitmapheight);
+				
+				Bitmap bitmapWidth = NumberUntil.getNumberBitmapI(PotteryFinishedActivity.this, (int) (widthF * 8 * 2));
+				width.setImageBitmap(bitmapWidth);
+				oldProgress = progress;
+			}
+		});
+		
 	}
+	
+	private int oldProgress;
 	
 	private Toast toast;
 	private void saveCollect() {

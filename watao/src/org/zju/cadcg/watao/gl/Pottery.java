@@ -4,23 +4,19 @@ import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import org.zju.cadcg.watao.utils.PotteryTextureManager;
-
-import android.graphics.Bitmap;
-
 public class Pottery extends GLMeshObject{
 	
 	public final static int VERTICAL_PRICISION = 50;
 	public final static int HORIZONAL_PRICISION = 50;
 	
-	private final float minHeight = 0.45f;
+	private final float minHeight = 0.5f;
 	private final float maxHeight = 3.0f;
-	private final float midHeight = 1.725f;
+	private final float midHeight = 1.75f;
 	private final float initializeHeight = 1.0f;
 	private final float initialRadius = 0.6f;
 	private final float thickness = 0.05f;
 	
-	private float currentHeight = 1.0f;
+	protected float currentHeight = 1.0f;
 	
 	public float getCurrentHeight() {
 		return currentHeight;
@@ -29,13 +25,13 @@ public class Pottery extends GLMeshObject{
 		this.currentHeight = currentHeight;
 	}
 
-	private float[] radiuses = new float[VERTICAL_PRICISION];
+	protected float[] radiuses = new float[VERTICAL_PRICISION];
 	public void setRadiuses(float[] radiuses) {
 		this.radiuses = radiuses;
 	}
 
-	private float radiusesMax = 1.0625f;
-	private float[] radiusesMin = new float[VERTICAL_PRICISION];
+	public float radiusesMax = 1.0625f;
+	protected float radiusesMin = 0.1875f;
 	
 	protected float angleForSensor = 0.0f;
 	protected float angleForRotate = 0.0f;
@@ -76,13 +72,6 @@ public class Pottery extends GLMeshObject{
 			radiuses[i] = initialRadius * (1.03f - i / (float) VERTICAL_PRICISION / 16.0f);
 		}
 		
-		int j = VERTICAL_PRICISION/8;
-		for(int i = 0; i < j; ++i){
-			radiusesMin[i] = 0.3125f - 0.125f * ((float)i/j);
-		}
-		for(int i = j; i < VERTICAL_PRICISION; ++i){
-			radiusesMin[i] = 0.1875f;
-		}
 		
 		//change the shape randomly
 		Random random = new Random(System.currentTimeMillis());
@@ -111,6 +100,7 @@ public class Pottery extends GLMeshObject{
 		vertices[length - 2] = 0;
 		vertices[length - 3] = 0;
 	}
+	  
 	
 	public float getVarUsedForEllipseToRegular() {
 		return varUsedForEllipseToRegular;
@@ -118,7 +108,7 @@ public class Pottery extends GLMeshObject{
 	public void setVarUsedForEllipseToRegular(float varUsedForEllipseToRegular) {
 		this.varUsedForEllipseToRegular = varUsedForEllipseToRegular;
 	}
-	private void genVerticesFromBases(){
+	protected void genVerticesFromBases(){
 		for( int i = 0; i < 2*VERTICAL_PRICISION; i++ ){
 			for( int j = 0; j < HORIZONAL_PRICISION + 1; j++ ){
 				int offset = (i*(HORIZONAL_PRICISION + 1) + j)*3;
@@ -271,12 +261,12 @@ public class Pottery extends GLMeshObject{
 	}
 
 	public void taller(){
-		if (currentHeight > midHeight) {
-			currentHeight += computerVerticalDelta();
+		System.out.println("Pottery.taller()");
+		if (currentHeight < midHeight) {
+			currentHeight += hspeed;
 		}else{
-			currentHeight += vSpeed;
+			currentHeight += computerVerticalDelta();
 		}
-		
 		genVerticesFromBases();
 		fastEstimateNormals();
 		updateVertexBuffer();
@@ -284,12 +274,12 @@ public class Pottery extends GLMeshObject{
 	}
 	
 	public void shorter(){
-		if (currentHeight < midHeight) {
-			currentHeight -= computerVerticalDelta();
+		System.out.println("Pottery.shorter()");
+		if (currentHeight > midHeight) {
+			currentHeight -= hspeed;
 		}else{
-			currentHeight -= vSpeed;
+			currentHeight -= computerVerticalDelta();
 		}
-		
 		genVerticesFromBases();
 		fastEstimateNormals();
 		updateVertexBuffer();
@@ -298,7 +288,11 @@ public class Pottery extends GLMeshObject{
 	
 	private float computerVerticalDelta() {
 		float delta = Math.abs(currentHeight - midHeight);
-		return vSpeed * (1.0f - 2 * delta / (maxHeight - minHeight));
+		float f = vSpeed * (1.0f - 2 * delta / (maxHeight - minHeight)) / 1.2f;
+		if (f < 0) {
+			f = 0;
+		}
+		return f;
 	}
 
 	
@@ -358,7 +352,7 @@ public class Pottery extends GLMeshObject{
 	
 	private void changeBasesThinner(float y, float mean,float delta) {
 		for( int i = 0; i < VERTICAL_PRICISION; i++ ){
-			float temp = (float) Math.atan((radiuses[i] - radiusesMin[i])) * 2.0f / (float) Math.PI;
+			float temp = (float) Math.atan((radiuses[i] - radiusesMin)) * 2.0f / (float) Math.PI;
 			radiuses[i] = radiuses[i] - temp * hspeed * gaussian(delta, mean, (float)i / VERTICAL_PRICISION * currentHeight - y );
 		}
 	}
@@ -587,6 +581,12 @@ public class Pottery extends GLMeshObject{
 		changeBasesThinner(random.nextFloat() * currentHeight, 0, delta);
 		final float[] radiusesEnd = radiuses.clone();
 		
+		startReset(heightBegin, heightEnd, radiusesBegin, radiusesEnd, true);
+		
+		
+	}
+	public void startReset(final float heightBegin, final float heightEnd,
+			final float[] radiusesBegin, final float[] radiusesEnd, final boolean isRandom) {
 		new Thread(new Runnable() {
 			
 			@Override
@@ -598,8 +598,12 @@ public class Pottery extends GLMeshObject{
 					currentHeight = heightBegin - (heightBegin - heightEnd) * rate;
 					for(int i = 0; i < VERTICAL_PRICISION; i++){
 						radiuses[i] = radiusesBegin[i] - (radiusesBegin[i] - radiusesEnd[i]) * rate; 
-					}		
-					genVerticesRandom();
+					}
+					if (isRandom) {
+						genVerticesRandom();
+					}else{
+						genVerticesFromBases();
+					}
 					fastEstimateNormals();
 					updateVertexBuffer();
 					updateNormalBuffer();
@@ -611,8 +615,6 @@ public class Pottery extends GLMeshObject{
 				}
 			}
 		}).start();
-		
-		
 	}
 	
 
@@ -649,6 +651,6 @@ public class Pottery extends GLMeshObject{
 	}
 	
 	public float getHeightReal(){
-		return currentHeight * 16;
+		return currentHeight * 8;
 	}
 }
