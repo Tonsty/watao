@@ -86,19 +86,59 @@ public class ShapeFragment extends Fragment {
 			@Override
 			public boolean onTouch(View v, final MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					System.err.println(GLManager.hasUncomplete);
-					if (GLManager.hasUncomplete == 2) {
-						Intent intent = new Intent(getActivity(), DecorateActivity.class);
-						intent.putExtra("fromUncomplete", true);
-						if (GLManager.decoratorTypeUn == DecorateActivity.QINGHUA) {
-							intent.putExtra("type", DecorateActivity.QINGHUA);
-						}else{
 
-							intent.putExtra("type", DecorateActivity.YOUSHANGCAI);
-						}
-						Watao.pauseBGM();
-						getActivity().startActivity(intent);
-						GLManager.hasUncomplete = 0;
+					if (GLManager.hasUncomplete == 2) {
+						new AlertDialog.Builder(getActivity())
+						.setTitle("提示")
+						.setMessage("您有未完成的作品,是否继续？")
+						.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								GLManager.restorePottery(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()));
+								Intent intent = new Intent(getActivity(), DecorateActivity.class);
+								intent.putExtra("fromUncomplete", true);
+								if (GLManager.decoratorTypeUn == DecorateActivity.QINGHUA) {
+									intent.putExtra("type", DecorateActivity.QINGHUA);
+								}else{
+
+									intent.putExtra("type", DecorateActivity.YOUSHANGCAI);
+								}
+								Watao.pauseBGM();
+								getActivity().startActivity(intent);
+							}
+
+						})
+						.setNegativeButton("丢弃", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								beginShape(null);
+								GLManager.hasUncomplete = 0;
+							}
+						}).create().show();
+						return true;
+					}else if(GLManager.hasUncomplete == 1){
+						new AlertDialog.Builder(getActivity())
+						.setTitle("提示")
+						.setMessage("您有未完成的作品,是否继续？")
+						.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								GLManager.restorePottery(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()));
+								beginShape(null);
+							}
+
+						})
+						.setNegativeButton("丢弃", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								GLManager.hasUncomplete = 0;
+								beginShape(null);
+							}
+						}).create().show();
 						return true;
 					}else{
 						beginShape(event);
@@ -305,13 +345,23 @@ public class ShapeFragment extends Fragment {
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new InputStreamReader(getActivity().getAssets().open(fileName)));
-			float height =	Float.parseFloat(reader.readLine());
-			float[] bases = new float[50];
-			for (int i = 0; i < 50; ++i) {
-				bases[49 - i] = Float.parseFloat(reader.readLine());
-				reader.readLine();
+			if (id == 5) {
+				float height =	Float.parseFloat(reader.readLine())/1.5f;
+				float[] bases = new float[50];
+				for (int i = 0; i < 50; ++i) {
+					bases[49 - i] = Float.parseFloat(reader.readLine())/1.5f;
+					reader.readLine();
+				}
+				GLManager.pottery.setShape(bases, height);
+			}else{
+				float height =	Float.parseFloat(reader.readLine());
+				float[] bases = new float[50];
+				for (int i = 0; i < 50; ++i) {
+					bases[49 - i] = Float.parseFloat(reader.readLine());
+					reader.readLine();
+				}
+				GLManager.pottery.setShape(bases, height);
 			}
-			GLManager.pottery.setShape(bases, height);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally{
@@ -340,7 +390,7 @@ public class ShapeFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+		needSave = true;
 		PotteryTextureManager.isBefore = true;
 		if (GLManager.alreadyInit && GLManager.alreadyInitGL) {
 			((Pottery200)GLManager.pottery).switchShader(Pottery200.CLAY);
@@ -372,7 +422,6 @@ public class ShapeFragment extends Fragment {
 			GLManager.rotateSpeed = 0.06f;
 		}
 	}
-	
 	@Override
 	public void onStop() {
 		if (GLManager.alreadyInit && needSave) {
@@ -385,8 +434,8 @@ public class ShapeFragment extends Fragment {
 			.putFloat("var", GLManager.pottery.getVarUsedForEllipseToRegular())
 			.putInt("hasUncomplete", 1)
 			.commit();
+			needSave = false;
 		}
-		needSave = true;
 		super.onStop();
 	}
 
@@ -399,27 +448,27 @@ public class ShapeFragment extends Fragment {
 	}
 
 	class myOnClickListener implements OnClickListener {
-
 		@Override
 		public void onClick(View arg0) {
 			if (GLManager.hasUncomplete == 2) {
-				
 				new AlertDialog.Builder(getActivity())
 				.setTitle("提示")
-				.setMessage("您有未完成的作品")
-				.setPositiveButton("继续", new DialogInterface.OnClickListener() {
+				.setMessage("您有未完成的作品,是否继续？")
+				.setPositiveButton("是", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						GLManager.restorePottery(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()));
 						Intent intent = new Intent(getActivity(), DecorateActivity.class);
 						intent.putExtra("fromUncomplete", true);
 						if (GLManager.decoratorTypeUn == DecorateActivity.QINGHUA) {
 							intent.putExtra("type", DecorateActivity.QINGHUA);
 						}else{
+
 							intent.putExtra("type", DecorateActivity.YOUSHANGCAI);
 						}
 						Watao.pauseBGM();
-						getActivity().startActivity(intent);							
+						getActivity().startActivity(intent);
 					}
 
 				})
@@ -427,16 +476,68 @@ public class ShapeFragment extends Fragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						GLManager.pottery.reset();
-						((Pottery200)GLManager.pottery).switchShader(Pottery200.CLAY);
-						PotteryTextureManager.setBaseTexture(getResources(), R.drawable.clay);
+						beginShape(null);
+						GLManager.hasUncomplete = 0;
+					}
+				}).create().show();
+			}else if(GLManager.hasUncomplete == 1){
+				new AlertDialog.Builder(getActivity())
+				.setTitle("提示")
+				.setMessage("您有未完成的作品,是否继续？")
+				.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						GLManager.restorePottery(getActivity(), PreferenceManager.getDefaultSharedPreferences(getActivity()));
+						beginShape(null);
+					}
+
+				})
+				.setNegativeButton("丢弃", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						GLManager.hasUncomplete = 0;
 						beginShape(null);
 					}
 				}).create().show();
-				GLManager.hasUncomplete = 0;
 			}else{
 				beginShape(null);
 			}
+//			if (GLManager.hasUncomplete == 2) {
+//				
+//				new AlertDialog.Builder(getActivity())
+//				.setTitle("提示")
+//				.setMessage("您有未完成的作品")
+//				.setPositiveButton("继续", new DialogInterface.OnClickListener() {
+//
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						Intent intent = new Intent(getActivity(), DecorateActivity.class);
+//						intent.putExtra("fromUncomplete", true);
+//						if (GLManager.decoratorTypeUn == DecorateActivity.QINGHUA) {
+//							intent.putExtra("type", DecorateActivity.QINGHUA);
+//						}else{
+//							intent.putExtra("type", DecorateActivity.YOUSHANGCAI);
+//						}
+//						Watao.pauseBGM();
+//						getActivity().startActivity(intent);							
+//					}
+//
+//				})
+//				.setNegativeButton("丢弃", new DialogInterface.OnClickListener() {
+//
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						GLManager.pottery.reset();
+//						((Pottery200)GLManager.pottery).switchShader(Pottery200.CLAY);
+//						PotteryTextureManager.setBaseTexture(getResources(), R.drawable.clay);
+//						beginShape(null);
+//					}
+//				}).create().show();
+//			}else{
+//				beginShape(null);
+//			}
 		}
 
 	}

@@ -100,8 +100,8 @@ public class GLView extends GLSurfaceView {
 		int action = event.getAction();
 		if(GLView.this.mode == WTMode.SHAPE){
 			if(action == MotionEvent.ACTION_DOWN){
-				lastX = event.getX();
-				lastY = event.getY();
+//				lastX = event.getX();
+//				lastY = event.getY();
 			}else if(action == MotionEvent.ACTION_MOVE){
 				synchronized (lock) {
 					lock = true;
@@ -109,6 +109,11 @@ public class GLView extends GLSurfaceView {
 				
 				float X = event.getX();
 				float Y = event.getY();
+				if (lastX == 0) {
+					lastX = X;
+					lastY = Y;
+				}
+				
 				GLManager.reshape(lastX, lastY, X, Y, width, height);
 				deltaY = Y - lastY;
 				lastX = X;
@@ -117,6 +122,7 @@ public class GLView extends GLSurfaceView {
 					lock = false;
 				}
 			}else if(action == MotionEvent.ACTION_UP){
+				lastX = lastY = 0;
 				new Thread(new Runnable() {
 					private float deltaX;
 					private float deltaY;
@@ -132,7 +138,7 @@ public class GLView extends GLSurfaceView {
 						while(!lock && (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1)){
 							float currentX = this.lastX + deltaX;
 							float currentY = this.lastY + deltaY;
-							GLManager.reshape(this.lastX, this.lastY, currentX, currentY, width, height);
+//							GLManager.reshape(this.lastX, this.lastY, currentX, currentY, width, height);
 							this.lastX = currentX;
 							this.lastY = currentY;
 							deltaX /= 2;

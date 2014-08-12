@@ -3,7 +3,10 @@ package org.zju.cadcg.watao.gl200;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.w3c.dom.ls.LSSerializer;
 import org.zju.cadcg.watao.R;
 import org.zju.cadcg.watao.gl.Pottery;
 import org.zju.cadcg.watao.shader.PotteryShader;
@@ -144,6 +147,71 @@ public class Pottery200 extends Pottery{
 	
 	public void setLum(float radio){
 		fireShader.setLum(radio);
+	}
+
+	public List<Float> getRadioForDraw(int top, int bottom) {
+		List<Float> result = new ArrayList<>();
+		result.add((float) bottom);
+		result.add(radiuses[bottom]);
+		float lastR = radiuses[bottom + 1]; 
+		float max = -1;
+		int d = 0;
+		if (lastR > radiuses[bottom]) {
+			max = lastR;
+			d = 1;
+		}else{
+			max = radiuses[bottom];
+			d = -1;
+		}
+		for (int i = bottom + 2; i <= top; ++i) {
+			if ((radiuses[i] - lastR) * d < 0) {
+				d = -d;
+				result.add((float) (i - 1));
+				result.add(radiuses[i - 1]);
+				if (radiuses[i - 1] > max) {
+					max = radiuses[i - 1];
+				}
+			}
+			lastR = radiuses[i];
+		}
+		result.add((float) top);
+		result.add(radiuses[top]);
+		if (radiuses[top] > max) {
+			max = radiuses[top];
+		}
+		for (int i = 1; i < result.size(); i += 2) {
+			result.set(i, max / result.get(i));
+		}
+		return result;
+	}
+
+	public float getWidth(float height) {
+		float radio = height / 8.0f / currentHeight;
+		float[] temp = new float[VERTICAL_PRICISION];
+		float max = 0f;
+		for (int i = 0; i < radiuses.length; ++i) {
+			float f = radiuses[i] * radio;
+			if (f > radiusesMax || f < radiusesMin) {
+				return 0;
+			}
+			temp[i] = f;
+			if (max < f) {
+				max = f;
+			}
+		}
+		radiuses = temp;
+		currentHeight = height/8f;
+		genVerticesFromBases();
+		updateVertexBuffer();
+		return max;
+	}
+
+	public float getRadio(int i, int j) {
+		float total = 0;
+		for (int j2 = j; j2 < i; ++j2) {
+			total += radiuses[j2];
+		}
+		return total/(i - j);
 	}
 }
 

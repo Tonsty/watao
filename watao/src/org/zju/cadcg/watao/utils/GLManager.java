@@ -105,14 +105,11 @@ public class GLManager {
 		background = new Background200();
 		fire = new Fire();
 		
-//		SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-//		hasUncomplete = defaultSharedPreferences.getInt("hasUncomplete", 0);
-//		if (hasUncomplete != 0) {
+		SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		hasUncomplete = defaultSharedPreferences.getInt("hasUncomplete", 0);
 //			restorePottery(context, defaultSharedPreferences);
-//		}else{
 //			PotteryTextureManager.setBaseTexture(context.getResources(), R.drawable.clay);
 //			((Pottery200)pottery).switchShader(Pottery200.CLAY);
-//		}
 		if (rotateThread == null) {
 			rotateThread = new Thread() {
 				@Override
@@ -169,22 +166,29 @@ public class GLManager {
 		alreadyInit = true;
 	}
 
-	private static void restorePottery(Context context,
+	public static void restorePottery(Context context,
 			SharedPreferences defaultSharedPreferences) {
 		float[] radius = (float[]) FileUtils.getSerializable(context, "ur");
-		float[] vertices = (float[]) FileUtils.getSerializable(context, "uv");
+//		float[] vertices = (float[]) FileUtils.getSerializable(context, "uv");
 		Pattern[] ps = null;
 		String[] occupy = null;
 		if (hasUncomplete == 2) {
 			ps = (Pattern[]) FileUtils.getSerializable(context, "up");
 			occupy = (String[]) FileUtils.getSerializable(context, "uo");
 		}
-		if (radius != null && vertices != null && (hasUncomplete == 1 ||(ps != null && occupy != null))) {
-
-			pottery.setRadiuses(radius);
-			pottery.setVertices(vertices);
+//		System.out.println(radius);
+//		System.out.println(vertices);
+//		System.out.println(hasUncomplete);
+//		System.out.println(ps);
+//		System.out.println(occupy);
+		if (radius != null /*&& vertices != null*/ && (hasUncomplete == 1 ||(ps != null && occupy != null))) {
+//			pottery.setRadiuses(radius);
+//			pottery.setVertices(vertices);
 			pottery.setVarUsedForEllipseToRegular(defaultSharedPreferences.getFloat("var", 0));
-			pottery.setCurrentHeight(defaultSharedPreferences.getFloat("height", -1.0f));;
+//			pottery.setCurrentHeight(float1);;
+
+			float endHeight = defaultSharedPreferences.getFloat("height", -1.0f);
+			pottery.startReset(pottery.getCurrentHeight(), endHeight, pottery.getRadiuses().clone(), radius, false);
 			if (hasUncomplete == 1) {
 				PotteryTextureManager.setBaseTexture(context.getResources(), R.drawable.clay);
 				((Pottery200)pottery).switchShader(Pottery200.CLAY);
@@ -207,9 +211,10 @@ public class GLManager {
 			PreferenceManager.getDefaultSharedPreferences(context)
 			.edit()
 			.putInt("hasUncomplete", 0).commit();
-
+			hasUncomplete = 0;
 		}else{
-			PotteryTextureManager.setBaseTexture(context.getResources(), R.drawable.clay);
+			PotteryTextureManager.
+			setBaseTexture(context.getResources(), R.drawable.clay);
 			((Pottery200)pottery).switchShader(Pottery200.CLAY);
 		}
 	}
@@ -242,10 +247,10 @@ public class GLManager {
 					pottery.thinner(y);
 				}
 			} else {
-				if (deltaY < 0) {
+				if (deltaY < -5) {
 					pottery.taller();
 				}
-				if (deltaY > 0) {
+				if (deltaY > 5) {
 					pottery.shorter();
 				}
 			}
