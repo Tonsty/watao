@@ -3,6 +3,7 @@ package org.zju.cadcg.watao.utils;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.zju.cadcg.watao.type.WTDecorator;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
@@ -147,9 +149,7 @@ public class PotteryTextureManager {
 	
 	
 	public static void reloadPattern(){
-		if (!needP) {
-			texture = origenalTexture.copy(Bitmap.Config.ARGB_8888, true);
-		}
+		texture = origenalTexture.copy(Config.ARGB_8888, true);
 		Canvas canvas = new Canvas(texture);
 		for (Pattern pattern : patterns.values()) {
 			occupy(pattern.buttom, pattern.top, pattern);
@@ -159,10 +159,26 @@ public class PotteryTextureManager {
 			}else{
 				tempTexture = getPatternTexture(pattern.idAfter);
 			}
-//			Matrix myMatrix = new Matrix();
-//			float[] src = new float[]{0,0,tempTexture.getWidth(),0,tempTexture.getWidth(), tempTexture.getHeight(),0,tempTexture.getHeight()};
-//			float y = pattern.heightf + pattern.topf;
-//			float[] dst = null;
+
+			Matrix myMatrix = new Matrix();
+			if (!pattern.needP) {
+				float y = pattern.heightf + pattern.topf;
+				float[] src = new float[]{0,0,tempTexture.getWidth(),0,tempTexture.getWidth(), tempTexture.getHeight(),0,tempTexture.getHeight()};
+				float[] dst = null;
+				dst = new float[]{0,pattern.topf, textureHeight_PIX, pattern.topf, textureHeight_PIX, y, 0 , y};
+				myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
+				canvas.drawBitmap(tempTexture, myMatrix, null);
+			}
+		}
+		
+		for (Pattern pattern : patterns.values()) {
+			occupy(pattern.buttom, pattern.top, pattern);
+			Bitmap tempTexture = null;
+			if (isBefore) {
+				tempTexture = getPatternTexture(pattern.idBefore);
+			}else{
+				tempTexture = getPatternTexture(pattern.idAfter);
+			}
 
 			Matrix myMatrix = new Matrix();
 			if (pattern.needP) {
@@ -190,8 +206,8 @@ public class PotteryTextureManager {
 					float deltab = textureWidth_PIX * (radio.get(i-1)-1)/2;
 					//								deltat = (float) Math.sqrt(deltat);
 					//								deltab = (float) Math.sqrt(deltab);
-//					deltab /= 2;
-//					deltat /= 2;
+					//					deltab /= 2;
+					//					deltat /= 2;
 					dst = new float[]{-deltat,drawtopfsub, textureWidth_PIX + deltat, drawtopfsub, textureWidth_PIX + deltab, y, -deltab , y};
 					myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
 					canvas.drawBitmap(tempBitmap, myMatrix, null);
@@ -200,13 +216,6 @@ public class PotteryTextureManager {
 					}
 					tempBitmap = null;
 				}
-			}else{
-				float y = pattern.heightf + pattern.topf;
-				float[] src = new float[]{0,0,tempTexture.getWidth(),0,tempTexture.getWidth(), tempTexture.getHeight(),0,tempTexture.getHeight()};
-				float[] dst = null;
-				dst = new float[]{0,pattern.topf, textureHeight_PIX, pattern.topf, textureHeight_PIX, y, 0 , y};
-				myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
-				canvas.drawBitmap(tempTexture, myMatrix, null);
 			}
 		}
 		canvas.save(Canvas.ALL_SAVE_FLAG);
@@ -218,24 +227,26 @@ public class PotteryTextureManager {
 		synchronized (isTextureInvalid) {
 			Set<String> checkOccupied = checkOccupied(bottom,top);
 			int middleNewPattern = (bottom + top) / 2;	
-			if (checkOccupied.size() == 1) {
-				Object key = checkOccupied.toArray()[0];
-				Pattern p = patterns.get(key);
-				int middleOrignal = (p.top + p.buttom)/2;
-				int dis = Math.abs(middleNewPattern - middleOrignal);
-				int halfOfTwoPattern = ((p.top - p.buttom)+(top - bottom))/2;
-				int overLapWidth = halfOfTwoPattern - dis;
-				if(dis / (float)halfOfTwoPattern > 0.25f && top + overLapWidth < occupied.length && bottom - overLapWidth >= 0){
-					if (middleNewPattern > middleOrignal) {
-						overLapWidth = p.top - bottom;
-						bottom += overLapWidth;
-						top += overLapWidth;
-					}else{
-						overLapWidth = top - p.buttom;
-						bottom -= overLapWidth;
-						top -= overLapWidth;
+			if (!isEraseMode) {
+				if (checkOccupied.size() == 1) {
+					Object key = checkOccupied.toArray()[0];
+					Pattern p = patterns.get(key);
+					int middleOrignal = (p.top + p.buttom)/2;
+					int dis = Math.abs(middleNewPattern - middleOrignal);
+					int halfOfTwoPattern = ((p.top - p.buttom)+(top - bottom))/2;
+					int overLapWidth = halfOfTwoPattern - dis;
+					if(dis / (float)halfOfTwoPattern > 0.25f && top + overLapWidth < occupied.length && bottom - overLapWidth >= 0){
+						if (middleNewPattern > middleOrignal) {
+							overLapWidth = p.top - bottom;
+							bottom += overLapWidth;
+							top += overLapWidth;
+						}else{
+							overLapWidth = top - p.buttom;
+							bottom -= overLapWidth;
+							top -= overLapWidth;
+						}
+						checkOccupied = checkOccupied(bottom, top);
 					}
-					checkOccupied = checkOccupied(bottom, top);
 				}
 			}
 			
@@ -244,93 +255,93 @@ public class PotteryTextureManager {
 			Canvas canvas = new Canvas(texture);
 			int dstHeight = (int) ((topf - bottomf)*textureHeight_PIX);
 			float drawtopf = textureHeight_PIX*(2 - topf * 0.97f);
-			if(0 == checkOccupied.size()){
-				if (!isEraseMode) {
-					if(decorator != null){
-						Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP);
-						patterns.put(pattern.idAfter + pattern.top, pattern);
-						occupy(bottom, top, pattern);
-						Matrix myMatrix = new Matrix();
-						
-						if (needP) {
-							List<Float> radio = GLManager.pottery.getRadioForDraw(top/10 - 1 , bottom/10);
-							float radius = GLManager.pottery.getRadio(top/10 - 1, bottom/10);
-							radius = radius / GLManager.pottery.radiusesMax;
-							int offset = (int) (450 * (1 - radius));
-							for (int i = 2; i < radio.size(); i += 2) {
-								Float bottomsub = radio.get(i - 2);
-								Float topsub = radio.get(i);
-								float topfsub = (float)topsub/(float)VERTICAL_PRICISION;
-								float bottomfsub = (float)bottomsub / (float)VERTICAL_PRICISION;
-								int dstHeightsub = (int) ((topfsub - bottomfsub)*textureHeight_PIX);
-								float drawtopfsub = textureHeight_PIX*(2 - topfsub * 0.97f);
-								float srct = decorator.getHeight()* (top/10 - topsub)/(top/10 - bottom/10);
-								float srcb = decorator.getHeight()* (top/10 - bottomsub)/(top/10 - bottom/10);
-								Bitmap tempBitmap = Bitmap.createBitmap(decorator, 0, (int)srct, decorator.getWidth(), (int) (srcb - srct));
-								float[] src = new float[]{decorator.getWidth() - offset, 0 
-										,0 + offset,0 
-										,0 + offset, srcb - srct,
-										decorator.getWidth() - offset, srcb - srct};
-								float y = dstHeightsub + drawtopfsub;
-								float[] dst = null;
-								float deltat = textureWidth_PIX * (radio.get(i+1)-1)/2;
-								float deltab = textureWidth_PIX * (radio.get(i-1)-1)/2;
-//								deltat = (float) Math.sqrt(deltat);
-//								deltab = (float) Math.sqrt(deltab);
-//								deltab /= 2;
-//								deltat /= 2;
-								dst = new float[]{-deltat,drawtopfsub, textureWidth_PIX + deltat, drawtopfsub, textureWidth_PIX + deltab, y, -deltab , y};
-								myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
-								canvas.drawBitmap(tempBitmap, myMatrix, null);
-								if (tempBitmap != decorator) {
-									tempBitmap.recycle();
-								}
-								tempBitmap = null;
-							}
-						}else{
-							float[] src = new float[]{0,0,decorator.getWidth(),0,decorator.getWidth(), decorator.getHeight(),0,decorator.getHeight()};
-							float y = dstHeight + drawtopf;
-							float[] dst = null;
-							dst = new float[]{0,drawtopf, textureHeight_PIX, drawtopf, textureHeight_PIX, y, 0 , y};
-							myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
-							canvas.drawBitmap(decorator, myMatrix, null);
-						}
-						DecorateActivity.isModify = true;
-					}else{
+			if (isEraseMode) {
+				if (checkOccupied.size() != 0) {
+					String erasedPatternId = getErasedPatternId(checkOccupied, middleNewPattern);
+					Pattern tempP = patterns.get(erasedPatternId);
+					if (decorator == null) {
 						Paint paint = new Paint();
-						paint.setColor(Color.WHITE);
+						paint.setColor(Color.RED);
 						paint.setStyle(Paint.Style.FILL);
-						canvas.drawRect(0, drawtopf, textureWidth_PIX, drawtopf + dstHeight, paint);
+						canvas.drawRect(0, tempP.topf, textureWidth_PIX, tempP.topf + tempP.heightf, paint);
+					}else{
+						deletePattern(erasedPatternId);
+						reloadPattern();
 					}
+					canvas.save(Canvas.ALL_SAVE_FLAG);
+					canvas.restore();
+					isTextureInvalid = true;
+				}
+				return;
+			}
+			if(0 == checkOccupied.size()){
+				if(decorator != null){
+					Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP);
+					patterns.put(pattern.idAfter + pattern.top, pattern);
+					occupy(bottom, top, pattern);
+					Matrix myMatrix = new Matrix();
+					if (needP) {
+						List<Float> radio = GLManager.pottery.getRadioForDraw(top/10 - 1 , bottom/10);
+						float radius = GLManager.pottery.getRadio(top/10 - 1, bottom/10);
+						radius = radius / GLManager.pottery.radiusesMax;
+						int offset = (int) (450 * (1 - radius));
+						for (int i = 2; i < radio.size(); i += 2) {
+							Float bottomsub = radio.get(i - 2);
+							Float topsub = radio.get(i);
+							float topfsub = (float)topsub/(float)VERTICAL_PRICISION;
+							float bottomfsub = (float)bottomsub / (float)VERTICAL_PRICISION;
+							int dstHeightsub = (int) ((topfsub - bottomfsub)*textureHeight_PIX);
+							float drawtopfsub = textureHeight_PIX*(2 - topfsub * 0.97f);
+							float srct = decorator.getHeight()* (top/10 - topsub)/(top/10 - bottom/10);
+							float srcb = decorator.getHeight()* (top/10 - bottomsub)/(top/10 - bottom/10);
+							Bitmap tempBitmap = Bitmap.createBitmap(decorator, 0, (int)srct, decorator.getWidth(), (int) (srcb - srct));
+							float[] src = new float[]{decorator.getWidth() - offset, 0 
+									,0 + offset,0 
+									,0 + offset, srcb - srct,
+									decorator.getWidth() - offset, srcb - srct};
+							float y = dstHeightsub + drawtopfsub;
+							float[] dst = null;
+							float deltat = textureWidth_PIX * (radio.get(i+1)-1)/2;
+							float deltab = textureWidth_PIX * (radio.get(i-1)-1)/2;
+							//								deltat = (float) Math.sqrt(deltat);
+							//								deltab = (float) Math.sqrt(deltab);
+							//								deltab /= 2;
+							//								deltat /= 2;
+							dst = new float[]{-deltat,drawtopfsub * 0.97f, textureWidth_PIX + deltat, drawtopfsub* 0.97f, textureWidth_PIX + deltab, y* 0.97f, -deltab , y* 0.97f};
+							myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
+							canvas.drawBitmap(tempBitmap, myMatrix, null);
+							if (tempBitmap != decorator) {
+								tempBitmap.recycle();
+							}
+							tempBitmap = null;
+						}
+					}else{
+						float[] src = new float[]{0,0,decorator.getWidth(),0,decorator.getWidth(), decorator.getHeight(),0,decorator.getHeight()};
+						float y = dstHeight + drawtopf;
+						float[] dst = null;
+						dst = new float[]{0,drawtopf, textureHeight_PIX, drawtopf, textureHeight_PIX, y, 0 , y};
+						myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
+						canvas.drawBitmap(decorator, myMatrix, null);
+					}
+					DecorateActivity.isModify = true;
+				}else{
+					Paint paint = new Paint();
+					paint.setColor(Color.WHITE);
+					paint.setStyle(Paint.Style.FILL);
+					canvas.drawRect(0, drawtopf, textureWidth_PIX, drawtopf + dstHeight, paint);
 				}
 			}else{
 				if(decorator != null){
 					Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP);
-					if (!isEraseMode) {
-						patterns.put(pattern.idAfter + pattern.top, pattern);
-						deletePattern(checkOccupied);
-					}else{
-						for (String string : checkOccupied) {
-							Set<String> temp = new HashSet<String>();
-							temp.add(string);
-							deletePattern(temp);
-						}
-					}
+					patterns.put(pattern.idAfter + pattern.top, pattern);
+					deletePattern(checkOccupied);
 					reloadPattern();
 					DecorateActivity.isModify = true;
 				}else{
 					Paint paint = new Paint();
 					paint.setColor(Color.RED);
 					paint.setStyle(Paint.Style.FILL);
-					if (isEraseMode) {
-						for (String id : checkOccupied) {
-							Pattern p = patterns.get(id);
-							canvas.drawRect(0, p.topf, textureWidth_PIX, p.topf + p.heightf, paint);
-							break;
-						}
-					}else{
-						canvas.drawRect(0, drawtopf, textureWidth_PIX, drawtopf + dstHeight, paint);
-					}
+					canvas.drawRect(0, drawtopf, textureWidth_PIX, drawtopf + dstHeight, paint);
 					
 				}
 			}
@@ -340,13 +351,60 @@ public class PotteryTextureManager {
 		}
 	}
 	
-	private static void deletePattern(Set<String> checkOccupied) {
-		for(String id:checkOccupied){
-			Pattern pattern = patterns.get(id);
-			patterns.remove(id);
-			for(int i = pattern.buttom; i < pattern.top; ++i){
-				occupied[i] = null;
+	private static String getErasedPatternId(Set<String> checkOccupied,
+			int middleNewPattern) {
+		int gapP = 100000;
+		int gap = 100000;
+		String keyNormal = null;
+		String keyP = null;
+		for (String key : checkOccupied) {
+			Pattern p = patterns.get(key);
+			int temp = Math.abs(middleNewPattern - (p.buttom + p.top)/2);
+			if (p.needP) {
+				if (gapP > temp) {
+					gapP = temp;
+					keyP = key;
+				}
+			}else{
+				if (gap > temp) {
+					gap = temp;
+					keyNormal = key;
+				}	
 			}
+			
+		}
+		if (keyP != null) {
+			return keyP;
+		}else{
+			return keyNormal;
+		}
+	}
+	private static void deletePattern(Set<String> checkOccupied) {
+		if (needP) {
+			for(String id:checkOccupied){
+				Pattern pattern = patterns.get(id);
+				if (pattern.needP) {
+					patterns.remove(id);
+					for(int i = pattern.buttom; i < pattern.top; ++i){
+						occupied[i] = null;
+					}	
+				}
+			}
+		}else{
+			for(String id:checkOccupied){
+				Pattern pattern = patterns.get(id);
+				patterns.remove(id);
+				for(int i = pattern.buttom; i < pattern.top; ++i){
+					occupied[i] = null;
+				}
+			}
+		}
+	}
+	private static void deletePattern(String id) {
+		Pattern pattern = patterns.get(id);
+		patterns.remove(id);
+		for(int i = pattern.buttom; i < pattern.top; ++i){
+			occupied[i] = null;
 		}
 	}
 

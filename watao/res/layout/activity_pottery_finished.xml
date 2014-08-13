@@ -18,6 +18,8 @@
         android:layout_width="50dp"
         android:layout_height="250dp"
         android:layout_alignParentRight="true"
+        android:alpha="0"
+        android:visibility="gone"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:background="@color/transparent"
@@ -66,9 +68,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/potteryinf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0"
+        android:visibility="gone"
         android:layout_marginLeft="20dp"
         android:background="@drawable/down"
         android:gravity="center"
@@ -95,9 +99,28 @@
         android:id="@+id/seekBar1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:max="100"
-        android:layout_below="@+id/linearLayout1"
-        android:layout_toLeftOf="@+id/menu_bar" />
+        android:alpha="0"
+        android:visibility="gone"
+        android:layout_alignLeft="@+id/potteryinf"
+        android:layout_below="@+id/potteryinf"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/menu_bar"
+        android:max="100" />
+    
+    
+    <ImageButton
+        android:id="@+id/next"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/begin_fire" />
 
 </RelativeLayout>

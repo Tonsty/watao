@@ -150,6 +150,9 @@ public class Pottery200 extends Pottery{
 	}
 
 	public List<Float> getRadioForDraw(int top, int bottom) {
+		if (top >= 50) {
+			top = 49;
+		}
 		List<Float> result = new ArrayList<>();
 		result.add((float) bottom);
 		result.add(radiuses[bottom]);

@@ -1,6 +1,5 @@
 package org.zju.cadcg.watao.activity;
 
-
 import java.io.FileNotFoundException;
 
 import org.zju.cadcg.watao.R;
@@ -215,11 +214,13 @@ public class PotteryFinishedActivity extends Activity {
 		height.setImageBitmap(bitmapHeight);
 		
 		//init seekbar
-		SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
+		final SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
 		oldProgress = (int) (heightF/24f*100);
 		seekBar.setProgress(oldProgress);
+		minHeight = heightF * 0.7f;
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
+
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				
@@ -234,7 +235,7 @@ public class PotteryFinishedActivity extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				float heightF = progress/100f*24;
-				if (heightF < 5) {
+				if (heightF < minHeight) {
 					seekBar.setProgress(oldProgress);
 					return;
 				}
@@ -253,8 +254,31 @@ public class PotteryFinishedActivity extends Activity {
 			}
 		});
 		
+		final View menuBar = findViewById(R.id.menu_bar);
+		final View inf = findViewById(R.id.potteryinf);
+		
+		final View complete = findViewById(R.id.next);
+		complete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				menuBar.setVisibility(View.VISIBLE);
+				inf.setVisibility(View.VISIBLE);
+				seekBar.setVisibility(View.VISIBLE);
+				complete.setVisibility(View.GONE);
+				
+				menuBar.animate().alpha(1).setDuration(500).start();
+				inf.animate().alpha(1).setDuration(500).start();
+				seekBar.animate().alpha(1).setDuration(500).start();
+				complete.animate().alpha(0).setDuration(500).start();
+				
+				GLManager.rotateSpeed = 0.0f;
+			}
+		});
+		
 	}
 	
+	private float minHeight;
 	private int oldProgress;
 	
 	private Toast toast;
@@ -310,7 +334,7 @@ public class PotteryFinishedActivity extends Activity {
 		glView.onResume();
 		glView.setMode(WTMode.INTERACT_VIEW);
 		GLManager.setEyeOffset(0.0f);
-		GLManager.rotateSpeed = 0.0f;
+		GLManager.rotateSpeed = 0.03f;
 		GLManager.mode = WTMode.INTERACT_VIEW;
 		GLManager.pottery.switchShader(Pottery200.CI);
 		GLManager.table.switchShader(Table200.COMMON);

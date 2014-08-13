@@ -261,7 +261,6 @@ public class Pottery extends GLMeshObject{
 	}
 
 	public void taller(){
-		System.out.println("Pottery.taller()");
 		if (currentHeight < midHeight) {
 			currentHeight += hspeed;
 		}else{
@@ -274,7 +273,6 @@ public class Pottery extends GLMeshObject{
 	}
 	
 	public void shorter(){
-		System.out.println("Pottery.shorter()");
 		if (currentHeight > midHeight) {
 			currentHeight -= hspeed;
 		}else{

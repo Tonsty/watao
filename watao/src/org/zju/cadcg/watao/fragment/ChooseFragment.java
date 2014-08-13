@@ -77,10 +77,7 @@ public class ChooseFragment extends Fragment implements OnClickListener{
 		getActivity().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 	}
 	
-	
 	public void startAnimation() {
 		view.startAnimation(animation);
 	}
-
-	
 }

@@ -56,7 +56,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -144,10 +143,15 @@ public class DecorateActivity extends Activity {
 		type1.setChecked(true);
 		findViewById(R.id.decorate_type_2).setOnClickListener(new ChooseDecoratorType(1));
 		findViewById(R.id.decorate_type_3).setOnClickListener(new ChooseDecoratorType(2));
-		findViewById(R.id.decorate_type_4).setOnClickListener(new ChooseDecoratorType(3));
+		View type4 = findViewById(R.id.decorate_type_4);
+		type4.setOnClickListener(new ChooseDecoratorType(3));
 
 		decoratorTypes = findViewById(R.id.decorate_type);
 		decoratorDisplayScrollView = findViewById(R.id.decorator_scrollView);
+		if (GLManager.pottery.getCurrentHeight() < 0.75) {
+			type4.setEnabled(false);
+			new AlertDialog.Builder(this).setMessage("您的胚体高度不足6cm，无法进行自拍贴图").setNeutralButton("确定", null).show();
+		}
 	}
 	private float oldWidth;
 	
@@ -355,7 +359,7 @@ public class DecorateActivity extends Activity {
 			}else{
 				GLManager.table.setTexture(this, R.drawable.table);
 				GLManager.background.setTexture(this, R.drawable.decorate_background);
-				startFire(780);
+				startFire(1280);
 			}
 			isFirst = false;
 		}else{
@@ -673,7 +677,7 @@ public class DecorateActivity extends Activity {
 			ImageView decoratorImageView = decoratorViews.get(customerId.size() - 1);
 			WTDecorator decorator = new WTDecorator();
 			decorator.idAfter = decorator.idBefore = id;
-			decorator.setWidth(0.6f);
+			decorator.setWidth(0.725f);
 			changeImageView(decoratorImageView, decorator);
 			switchDecorate(decoratorViews.get(0));
 
