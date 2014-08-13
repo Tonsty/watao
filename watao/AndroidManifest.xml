@@ -132,6 +132,11 @@
             android:name="UMENG_APPKEY"
             android:value="52d7c98156240b640f030af2" >
         </meta-data>
+        <service android:name="com.chillax.service.landDivideServeice" /> 
+
+        <activity android:name="com.chillax.mytest.AddressChoose" />
+        <activity android:name="com.chillax.mytest.BuyAddress" />
+        <activity android:name="com.chillax.mytest.PersonAddress" />
 
     </application>
 

@@ -6,8 +6,11 @@ package org.zju.cadcg.watao;
 import org.zju.cadcg.watao.activity.DecorateActivity;
 import org.zju.cadcg.watao.utils.MySensor;
 
+import com.chillax.service.landDivideServeice;
+
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
@@ -55,5 +58,9 @@ public class Watao extends Application {
 		Editor editor = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
 		editor.putBoolean(DecorateActivity.KEY_IS_SHOW_PWD_TIP, true);
 		editor.commit();
+		
+		Intent i = new Intent(this, landDivideServeice.class);
+		startService(i);
+		
 	}
 }
