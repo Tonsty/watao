@@ -35,4 +35,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimAmount">0</item>
     </style>
+    
+    <style name="transparent" parent="@style/CustomDialog">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>

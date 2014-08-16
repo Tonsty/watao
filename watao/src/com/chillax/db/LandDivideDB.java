@@ -93,10 +93,13 @@ public class LandDivideDB extends SQLiteOpenHelper {
 
 			// TODO: handle exception
 		} finally {
-			if(!cursor.isClosed()){
-				cursor.close();
-				db.close();
+			if (cursor != null) {
+				if(!cursor.isClosed()){
+					cursor.close();
+					db.close();
+				}
 			}
+
 		}
 		return list;
 	}

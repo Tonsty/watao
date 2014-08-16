@@ -3,7 +3,6 @@ package org.zju.cadcg.watao.utils;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -192,7 +191,7 @@ public class PotteryTextureManager {
 					float topfsub = (float)topsub/(float)VERTICAL_PRICISION;
 					float bottomfsub = (float)bottomsub / (float)VERTICAL_PRICISION;
 					int dstHeightsub = (int) ((topfsub - bottomfsub)*textureHeight_PIX);
-					float drawtopfsub = textureHeight_PIX*(2 - topfsub * 0.97f);
+					float drawtopfsub = textureHeight_PIX*(2 - topfsub);
 					float srct = tempTexture.getHeight()* (pattern.top/10 - topsub)/(pattern.top/10 - pattern.buttom/10);
 					float srcb = tempTexture.getHeight()* (pattern.top/10 - bottomsub)/(pattern.top/10 - pattern.buttom/10);
 					Bitmap tempBitmap = Bitmap.createBitmap(tempTexture, 0, (int)srct, tempTexture.getWidth(), (int) (srcb - srct));
@@ -200,7 +199,7 @@ public class PotteryTextureManager {
 							,0 + offset,0 
 							,0 + offset, srcb - srct,
 							tempTexture.getWidth() - offset, srcb - srct};
-					float y = dstHeightsub + drawtopfsub;
+					float y;
 					float[] dst = null;
 					float deltat = textureWidth_PIX * (radio.get(i+1)-1)/2;
 					float deltab = textureWidth_PIX * (radio.get(i-1)-1)/2;
@@ -208,6 +207,9 @@ public class PotteryTextureManager {
 					//								deltab = (float) Math.sqrt(deltab);
 					//					deltab /= 2;
 					//					deltat /= 2;
+					
+					y = dstHeightsub + drawtopfsub;
+					drawtopfsub -= 5;
 					dst = new float[]{-deltat,drawtopfsub, textureWidth_PIX + deltat, drawtopfsub, textureWidth_PIX + deltab, y, -deltab , y};
 					myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
 					canvas.drawBitmap(tempBitmap, myMatrix, null);
@@ -250,11 +252,11 @@ public class PotteryTextureManager {
 				}
 			}
 			
-			float topf = (float)top/(float)VERTICAL_PRICISION / 10;
-			float bottomf = (float)bottom / (float)VERTICAL_PRICISION / 10;
+			float topf = (float)top/(float)VERTICAL_PRICISION / 10 ;
+			float bottomf = (float)bottom / (float)VERTICAL_PRICISION / 10 ;
 			Canvas canvas = new Canvas(texture);
 			int dstHeight = (int) ((topf - bottomf)*textureHeight_PIX);
-			float drawtopf = textureHeight_PIX*(2 - topf * 0.97f);
+			float drawtopf = textureHeight_PIX*(2 - topf);
 			if (isEraseMode) {
 				if (checkOccupied.size() != 0) {
 					String erasedPatternId = getErasedPatternId(checkOccupied, middleNewPattern);
@@ -288,10 +290,10 @@ public class PotteryTextureManager {
 						for (int i = 2; i < radio.size(); i += 2) {
 							Float bottomsub = radio.get(i - 2);
 							Float topsub = radio.get(i);
-							float topfsub = (float)topsub/(float)VERTICAL_PRICISION;
-							float bottomfsub = (float)bottomsub / (float)VERTICAL_PRICISION;
+							float topfsub = (float)topsub/(float)VERTICAL_PRICISION ;
+							float bottomfsub = (float)bottomsub / (float)VERTICAL_PRICISION ;
 							int dstHeightsub = (int) ((topfsub - bottomfsub)*textureHeight_PIX);
-							float drawtopfsub = textureHeight_PIX*(2 - topfsub * 0.97f);
+							float drawtopfsub = textureHeight_PIX*(2 - topfsub);
 							float srct = decorator.getHeight()* (top/10 - topsub)/(top/10 - bottom/10);
 							float srcb = decorator.getHeight()* (top/10 - bottomsub)/(top/10 - bottom/10);
 							Bitmap tempBitmap = Bitmap.createBitmap(decorator, 0, (int)srct, decorator.getWidth(), (int) (srcb - srct));
@@ -299,7 +301,9 @@ public class PotteryTextureManager {
 									,0 + offset,0 
 									,0 + offset, srcb - srct,
 									decorator.getWidth() - offset, srcb - srct};
-							float y = dstHeightsub + drawtopfsub;
+							float y;
+							y = dstHeightsub + drawtopfsub;
+								
 							float[] dst = null;
 							float deltat = textureWidth_PIX * (radio.get(i+1)-1)/2;
 							float deltab = textureWidth_PIX * (radio.get(i-1)-1)/2;
@@ -307,7 +311,8 @@ public class PotteryTextureManager {
 							//								deltab = (float) Math.sqrt(deltab);
 							//								deltab /= 2;
 							//								deltat /= 2;
-							dst = new float[]{-deltat,drawtopfsub * 0.97f, textureWidth_PIX + deltat, drawtopfsub* 0.97f, textureWidth_PIX + deltab, y* 0.97f, -deltab , y* 0.97f};
+							drawtopfsub -= 5;
+							dst = new float[]{-deltat,drawtopfsub, textureWidth_PIX + deltat, drawtopfsub, textureWidth_PIX + deltab, y, -deltab , y};
 							myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
 							canvas.drawBitmap(tempBitmap, myMatrix, null);
 							if (tempBitmap != decorator) {

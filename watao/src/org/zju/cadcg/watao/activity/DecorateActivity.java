@@ -1,9 +1,7 @@
 package org.zju.cadcg.watao.activity;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,6 +23,7 @@ import org.zju.cadcg.watao.utils.FileUtils;
 import org.zju.cadcg.watao.utils.PotteryTextureManager;
 import org.zju.cadcg.watao.utils.GLManager;
 import org.zju.cadcg.watao.utils.PotteryTextureManager.Pattern;
+import org.zju.cadcg.watao.view.ClassicDialog;
 import org.zju.cadcg.watao.view.CustomProgressDialog;
 
 import android.app.Activity;
@@ -78,6 +77,14 @@ public class DecorateActivity extends Activity {
 	public static boolean isModify = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		boolean isFirst = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isDecorateFirst", true);
+		isFirst = true;
+		if (isFirst) {
+			ClassicDialog progressDialog = new ClassicDialog(this, R.layout.zuohua);
+			progressDialog.show();
+			PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isDecorateFirst", false).commit();
+		}
+		
 		isModify = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_decorate);
@@ -105,7 +112,9 @@ public class DecorateActivity extends Activity {
 		backButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isModify) {
+				if (potteryType == QINGHUA && GLManager.pottery.varUsedForEllipseToRegular < 0.8f && !isModify) {
+					startActivity(new Intent(DecorateActivity.this, ShapeActivity.class).putExtra("backToMain", true));
+				}else{
 					needSave = false;
 					new AlertDialog.Builder(DecorateActivity.this).setMessage("您的作品即将丢失,是否继续?").setNegativeButton("否", null).setPositiveButton("是", new DialogInterface.OnClickListener() {
 
@@ -114,8 +123,6 @@ public class DecorateActivity extends Activity {
 							startActivity(new Intent(DecorateActivity.this, ShapeActivity.class).putExtra("backToMain", true));
 						}
 					}).show();
-				}else{
-					startActivity(new Intent(DecorateActivity.this, ShapeActivity.class).putExtra("backToMain", true));
 				}
 			}
 		});
@@ -181,7 +188,6 @@ public class DecorateActivity extends Activity {
 	}
 	private boolean isFirst = true;
 	private boolean needSave = true;
-	private String fileNameForCamera;
 	private boolean youshangFlag = true;
 	
 	public void startFire(final int wendu){
@@ -512,19 +518,30 @@ public class DecorateActivity extends Activity {
 
 	public boolean isShowPwdTip() {
 		if (sharedPreferences == null){
-			sharedPreferences = PreferenceManager
-			.getDefaultSharedPreferences(this);
+			sharedPreferences = PreferenceManager .getDefaultSharedPreferences(this);
 		}
 		return sharedPreferences.getBoolean(KEY_IS_SHOW_PWD_TIP, true);
 	}
 
 	
-	public static Integer[] qinghuaBeforeId = new Integer[]{R.drawable.q13, R.drawable.q21, R.drawable.q345, R.drawable.q44, R.drawable.q535, R.drawable.q645, R.drawable.q74};
-	public static Integer[] qinghuaAfterId = new Integer[]{R.drawable.q13a, R.drawable.q21a, R.drawable.q345a, R.drawable.q44a, R.drawable.q535a, R.drawable.q645a, R.drawable.q74a};
-	private float[] qinghuaWidthId = new float[]{0.375f,0.125f,0.5625f,0.5f,0.4375f,0.5625f,0.5f};
+	public static Integer[] qinghuaBeforeId = new Integer[]{R.drawable.q13, R.drawable.q21, R.drawable.q345, R.drawable.q44, R.drawable.q535, R.drawable.q645, R.drawable.q74, R.drawable.q95, R.drawable.q84};
+	public static Integer[] qinghuaAfterId = new Integer[]{R.drawable.q13a, R.drawable.q21a, R.drawable.q345a, R.drawable.q44a, R.drawable.q535a, R.drawable.q645a, R.drawable.q74a,R.drawable.q95a, R.drawable.q84a};
+	private float[] qinghuaWidthId = new float[]{0.375f,0.125f,0.5625f,0.5f,0.4375f,0.5625f,0.5f, 0.5f, 0.625f};
+	
+	public static Integer[] qdb = new Integer[]{R.drawable.qd17,R.drawable.qd23,R.drawable.qd335,R.drawable.qd438,R.drawable.qd545,R.drawable.qd63,R.drawable.qd74,R.drawable.qd84 ,R.drawable.qd95,R.drawable.qd1035};
+	public static Integer[] qda = new Integer[]{R.drawable.qd17a,R.drawable.qd23a,R.drawable.qd335a,R.drawable.qd438a,R.drawable.qd545a,R.drawable.qd63a,R.drawable.qd74a,R.drawable.qd84a ,R.drawable.qd95a,R.drawable.qd1035a};
+	public static Float[] qdw = new Float[]{0.875f,0.375f,0.4375f, 0.475f, 0.5625f, 0.375f,0.5f,0.5f,0.5f,0.4375f};
+	
+	public static Integer[] qgb = new Integer[]{R.drawable.qg14,R.drawable.qg245,R.drawable.qg365,R.drawable.qg433,R.drawable.qg53,R.drawable.qg635, R.drawable.qg75};
+	public static Integer[] qga = new Integer[]{R.drawable.qg14a,R.drawable.qg245a,R.drawable.qg365a,R.drawable.qg433a,R.drawable.qg53a,R.drawable.qg635a, R.drawable.qg75a};
+	public static Float[] qgw = new Float[]{0.5f,0.375f,0.8125f, 0.4125f, 0.375f, 0.4375f, 0.625f};
+	
+	public static Integer[] qcb = new Integer[]{R.drawable.qc13,R.drawable.qc225,R.drawable.qc31,R.drawable.qc44,R.drawable.qc54,R.drawable.qc63,R.drawable.qc718,R.drawable.qc818};
+	public static Integer[] qca = new Integer[]{R.drawable.qc13a,R.drawable.qc225a,R.drawable.qc31a,R.drawable.qc44a,R.drawable.qc54a,R.drawable.qc63a,R.drawable.qc718a,R.drawable.qc818a};
+	public static Float[] qcw = new Float[]{0.375f,0.3125f,0.125f, 0.5f, 0.5f,0.375f, 0.225f,0.225f};
 	
 	public static Integer[] youshang = new Integer[]{R.drawable.y1, R.drawable.y2, R.drawable.y3, R.drawable.y4, R.drawable.y543, R.drawable.y626};
-	private float[] youshangWidthId = new float[]{0.2f,0.3f,0.1f,0.4f, 0.5375f, 0.325f};
+	private Float[] youshangWidthId = new Float[]{0.2f,0.3f,0.1f,0.4f, 0.5375f, 0.325f};
 	
 	private static List<String> customerId = new ArrayList<String>();
 	
@@ -541,10 +558,12 @@ public class DecorateActivity extends Activity {
 		}
 		if (bw == WTDecorateTypeEnum.CUSTOM) {
 			
+			//make sure the imageview is enough;
 			int needImageView = customerId.size() + 1;
 			int avialableImageView = decoratorViews.size();
 			adapterImageViewNumber(needImageView, avialableImageView);
 			
+			//set decorate to the image view
 			int i = 0;
 			for (; i < customerId.size(); ++i) {
 				String id = customerId.get(i);
@@ -556,11 +575,10 @@ public class DecorateActivity extends Activity {
 
 				ImageView decoratorImageView = decoratorViews.get(i);
 				changeImageView(decoratorImageView, decorator);
-
 			}
 			
-			if (customerId.size() > 1) {
-				PotteryTextureManager.currentDecorater = (WTDecorator) decoratorViews.get(0).getTag();
+			if (customerId.size() > 0) {
+				switchDecorate(decoratorViews.get(0));
 			}
 			
 			ImageView view = decoratorViews.get(i++);
@@ -577,18 +595,17 @@ public class DecorateActivity extends Activity {
 			for (; i < decoratorViews.size(); ++i) {
 				decoratorViews.get(i).setVisibility(View.GONE);
 			}
-			
 			return;		
 		}
 		
-		float[] decorateWidth = null;
+		Float[] decorateWidth = null;
 		Object[] decorateResourceBeforeId = null;
 		Object[] decorateResourceAfterId = null;
 		if(bw == WTDecorateTypeEnum.DANDU){
 			if (potteryType == DecorateActivity.QINGHUA) {
-				decorateResourceBeforeId = qinghuaBeforeId;
-				decorateResourceAfterId = qinghuaAfterId;
-				decorateWidth = qinghuaWidthId;
+				decorateResourceBeforeId = qdb;
+				decorateResourceAfterId = qda;
+				decorateWidth = qdw;
 			}else{
 				decorateResourceBeforeId = youshang;
 				decorateResourceAfterId = youshang;
@@ -596,9 +613,9 @@ public class DecorateActivity extends Activity {
 			}
 		}else if(bw == WTDecorateTypeEnum.HUANRAO){
 			if (potteryType == DecorateActivity.QINGHUA) {
-				decorateResourceBeforeId = qinghuaBeforeId;
-				decorateResourceAfterId = qinghuaAfterId;
-				decorateWidth = qinghuaWidthId;
+				decorateResourceBeforeId = qgb;
+				decorateResourceAfterId = qga;
+				decorateWidth = qgw;
 			}else{
 				decorateResourceBeforeId = youshang;
 				decorateResourceAfterId = youshang;
@@ -606,9 +623,9 @@ public class DecorateActivity extends Activity {
 			}
 		}else if(bw == WTDecorateTypeEnum.CHONGFU){
 			if (potteryType == DecorateActivity.QINGHUA) {
-				decorateResourceBeforeId = qinghuaBeforeId;
-				decorateResourceAfterId = qinghuaAfterId;
-				decorateWidth = qinghuaWidthId;
+				decorateResourceBeforeId = qcb;
+				decorateResourceAfterId = qca;
+				decorateWidth = qcw;
 			}else{
 				decorateResourceBeforeId = youshang;
 				decorateResourceAfterId = youshang;
@@ -681,6 +698,7 @@ public class DecorateActivity extends Activity {
 			changeImageView(decoratorImageView, decorator);
 			switchDecorate(decoratorViews.get(0));
 
+			System.out.println("set current decorate " + decorator.toString());
 			PotteryTextureManager.currentDecorater = decorator;
 
 			ImageView view = decoratorViews.get(customerId.size());
@@ -733,6 +751,7 @@ public class DecorateActivity extends Activity {
 		if (eraseButton != null) {
 			eraseButton.setChecked(false);
 		}
+		System.out.println("set current decorate switch " + v.getTag().toString());
 		PotteryTextureManager.currentDecorater = (WTDecorator)v.getTag();
 		if (currentView != null) {
 			currentView.setBackgroundResource(R.drawable.decorate_block);
@@ -742,18 +761,18 @@ public class DecorateActivity extends Activity {
 		PotteryTextureManager.isEraseMode = false;
 	}
 	
-	private byte[] fileToByteArray(File file) throws IOException {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		FileInputStream fis = new FileInputStream(file);
-		byte[] buff = new byte[1024];
-		int len = 0;
-		while ( (len = fis.read(buff)) != -1) {
-			outputStream.write(buff, 0, len);
-		}
-		fis.close();
-		outputStream.close();
-		return outputStream.toByteArray();
-	}
+//	private byte[] fileToByteArray(File file) throws IOException {
+//		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//		FileInputStream fis = new FileInputStream(file);
+//		byte[] buff = new byte[1024];
+//		int len = 0;
+//		while ( (len = fis.read(buff)) != -1) {
+//			outputStream.write(buff, 0, len);
+//		}
+//		fis.close();
+//		outputStream.close();
+//		return outputStream.toByteArray();
+//	}
 
 
 	public void setMenuVisibility(boolean isShow) {
@@ -787,10 +806,10 @@ public class DecorateActivity extends Activity {
 	}
 
 
-	public void setPotteryType(int potteryType) {
-		this.potteryType = potteryType;
-		setDecorator(WTDecorateTypeEnum.DANDU);
-	}
+//	public void setPotteryType(int potteryType) {
+//		this.potteryType = potteryType;
+//		setDecorator(WTDecorateTypeEnum.DANDU);
+//	}
 	
 	
 	/**

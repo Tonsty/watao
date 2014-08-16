@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.zju.cadcg.watao.R;
+import org.zju.cadcg.watao.activity.BuyActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -209,9 +210,10 @@ public class AddressChoose extends Activity {
 				
 				quStr = name;
 				
-				Intent i2 = new Intent(AddressChoose.this,BuyAddress.class);
+				Intent i2 = new Intent(AddressChoose.this,BuyActivity.class);
 				i2.putExtra("address", shengStr+" "+shiStr+" "+quStr);
-				startActivity(i2);
+				setResult(Activity.RESULT_OK, i2);
+//				startActivity(i2);
 				finish();
 			}
 		});

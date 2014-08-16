@@ -108,6 +108,8 @@ public class PotteryFinishedActivity extends Activity {
 	}
 	
 	long time;
+
+	private float maxHeight;
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && from == null) {
@@ -214,10 +216,20 @@ public class PotteryFinishedActivity extends Activity {
 		height.setImageBitmap(bitmapHeight);
 		
 		//init seekbar
+		float maxR = GLManager.pottery.getMaxWidth();
+		float maxH = 17f/maxR * heightF;
+		float maxH2 = heightF * 1.2f;
+		maxHeight = Math.min(maxH, maxH2);
+		
+		float minR = GLManager.pottery.getMinWidth();
+		float minH = 3f/minR * heightF;
+		float minH2 = heightF * 0.8f;
+		minHeight = Math.max(minH, minH2);
+		
 		final SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
-		oldProgress = (int) (heightF/24f*100);
+		int oldProgress = (int) ((heightF-minHeight)/(maxHeight - minHeight)*100);
 		seekBar.setProgress(oldProgress);
-		minHeight = heightF * 0.7f;
+		
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 
@@ -234,23 +246,15 @@ public class PotteryFinishedActivity extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				float heightF = progress/100f*24;
-				if (heightF < minHeight) {
-					seekBar.setProgress(oldProgress);
-					return;
-				}
+				float heightF = progress/100f*(maxHeight - minHeight) + minHeight;
+				
 				float widthF = 0;
 				widthF = GLManager.pottery.getWidth(heightF);
-				if (widthF == 0) {
-					seekBar.setProgress(oldProgress);
-					return;
-				}
 				Bitmap bitmapheight = NumberUntil.getNumberBitmapI(PotteryFinishedActivity.this, (int) heightF);
 				height.setImageBitmap(bitmapheight);
 				
 				Bitmap bitmapWidth = NumberUntil.getNumberBitmapI(PotteryFinishedActivity.this, (int) (widthF * 8 * 2));
 				width.setImageBitmap(bitmapWidth);
-				oldProgress = progress;
 			}
 		});
 		
@@ -279,7 +283,6 @@ public class PotteryFinishedActivity extends Activity {
 	}
 	
 	private float minHeight;
-	private int oldProgress;
 	
 	private Toast toast;
 	private void saveCollect() {
@@ -334,7 +337,7 @@ public class PotteryFinishedActivity extends Activity {
 		glView.onResume();
 		glView.setMode(WTMode.INTERACT_VIEW);
 		GLManager.setEyeOffset(0.0f);
-		GLManager.rotateSpeed = 0.03f;
+		GLManager.rotateSpeed = 0.01f;
 		GLManager.mode = WTMode.INTERACT_VIEW;
 		GLManager.pottery.switchShader(Pottery200.CI);
 		GLManager.table.switchShader(Table200.COMMON);

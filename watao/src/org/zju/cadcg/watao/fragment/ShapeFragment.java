@@ -20,6 +20,8 @@ import org.zju.cadcg.watao.type.WTMode;
 import org.zju.cadcg.watao.utils.FileUtils;
 import org.zju.cadcg.watao.utils.PotteryTextureManager;
 import org.zju.cadcg.watao.utils.GLManager;
+import org.zju.cadcg.watao.view.ClassicDialog;
+
 
 import android.animation.Animator;
 import android.content.DialogInterface;
@@ -366,8 +368,7 @@ public class ShapeFragment extends Fragment {
 			e.printStackTrace();
 		} finally{
 			try {
-				reader.
-				close();
+				reader.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -376,6 +377,12 @@ public class ShapeFragment extends Fragment {
 	}
 	
 	private void showClassic() {
+		boolean isFirst = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("isClassicFirst", true);
+		if (isFirst) {
+			ClassicDialog progressDialog = new ClassicDialog(getActivity(), R.layout.shanghua);
+			progressDialog.show();
+			PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("isClassicFirst", false).commit();
+		}
 		int height = (Integer) chooseClassicView.getTag();
 		Animation animation = new TranslateAnimation(0, 0, -height, 0);
 		animation.setDuration(500);

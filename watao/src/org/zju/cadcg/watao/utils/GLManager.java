@@ -247,10 +247,9 @@ public class GLManager {
 					pottery.thinner(y);
 				}
 			} else {
-				if (deltaY < -5) {
+				if (deltaY < -3) {
 					pottery.taller();
-				}
-				if (deltaY > 5) {
+				}else if (deltaY > 3) {
 					pottery.shorter();
 				}
 			}

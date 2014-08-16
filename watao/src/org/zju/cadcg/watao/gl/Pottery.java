@@ -141,7 +141,7 @@ public class Pottery extends GLMeshObject{
 		float verticalStep = 0.5f/VERTICAL_PRICISION;
 		float horizonalStep = 1f/HORIZONAL_PRICISION;
 		for(int i = 0; i < 2*VERTICAL_PRICISION; ++i){
-			float f = 1f - i*verticalStep;
+			float f = (1f - i*verticalStep)* 1.08f - 0.08f;
 			for(int j = 0; j < HORIZONAL_PRICISION + 1; ++j){
 				int offset = (i*(HORIZONAL_PRICISION + 1) + j)*2;
 				texCoords[offset] = j*horizonalStep;
@@ -638,10 +638,21 @@ public class Pottery extends GLMeshObject{
 	public void onResume() {
 		
 	}
+	
 	public float getMaxWidth() {
 		float result = 0;
 		for (float f : radiuses) {
 			if (f > result) {
+				result = f;
+			}
+		}
+		return result * 16;
+	}
+	
+	public float getMinWidth() {
+		float result = 100;
+		for (float f : radiuses) {
+			if (f < result) {
 				result = f;
 			}
 		}

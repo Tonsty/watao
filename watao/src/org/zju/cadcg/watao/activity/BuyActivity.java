@@ -1,21 +1,17 @@
 package org.zju.cadcg.watao.activity;
 
 import org.zju.cadcg.watao.R;
-import org.zju.cadcg.watao.utils.AndroidBug5497Workaround;
 import org.zju.cadcg.watao.utils.GLManager;
-import org.zju.cadcg.watao.utils.NumberUntil;
 
 import com.chillax.mytest.AddressChoose;
 
-import android.animation.TimeInterpolator;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +19,8 @@ import android.widget.TextView;
 
 public class BuyActivity extends Activity {
 
+
+	private EditText et;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +62,30 @@ public class BuyActivity extends Activity {
 		TextView price = (TextView) findViewById(R.id.buy_price);
 		price.setText(String.valueOf(GLManager.getPrice()));
 		
-		findViewById(R.id.buy_address).setOnClickListener(new OnClickListener() {
-			
+		findViewById(R.id.buy_address).setOnTouchListener(new OnTouchListener() {
+			int touch_flag = 0;
 			@Override
-			public void onClick(View v) {
-				Intent intent=new Intent(BuyActivity.this, AddressChoose.class);
-				startActivity(intent);
+			public boolean onTouch(View v, MotionEvent event) {
+				++ touch_flag;
+				if (touch_flag == 2) {
+					Intent intent=new Intent(BuyActivity.this, AddressChoose.class);
+					startActivityForResult(intent, 10086);
+					touch_flag = 0;
+				}
+				return false;
 			}
 		});
 		
+		et = (EditText) findViewById(R.id.buy_address);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			String address = data.getStringExtra("address");
+			et.setText(address);
+		}
 	}
 
 }
