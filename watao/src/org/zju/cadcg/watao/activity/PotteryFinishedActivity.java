@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -65,7 +66,6 @@ public class PotteryFinishedActivity extends Activity {
 			float[] vertices = (float[]) FileUtils.getSerializable(this, fileName);
 			GLManager.pottery.setVertices(vertices);		
 			GLManager.pottery.fastEstimateNormals();
-			
 		}else{
 			PotteryTextureManager.changeBaseTexture(this.getResources(), R.drawable.procelain);
 		}
@@ -74,11 +74,12 @@ public class PotteryFinishedActivity extends Activity {
 	
 		initUI();
 		initUMeng();
+		GLManager.rotateSpeed = 0.01f;
 	}
 
 	private Bitmap image;
 
-	private ToggleButton collect;
+	private ImageButton collect;
 	private void initUMeng() {
 		
 		String appId = "wx15592023243a88b0";
@@ -110,6 +111,14 @@ public class PotteryFinishedActivity extends Activity {
 	long time;
 
 	private float maxHeight;
+
+	private View menuBar;
+
+	private View inf;
+
+	private View complete;
+
+	private SeekBar seekBar;
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && from == null) {
@@ -136,7 +145,7 @@ public class PotteryFinishedActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				if (!collect.isChecked() && from == null) {
+				if (!(boolean)collect.getTag() && from == null) {
 					new AlertDialog.Builder(PotteryFinishedActivity.this).setMessage("作品尚未收藏，是否继续？").setPositiveButton("是", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -182,28 +191,34 @@ public class PotteryFinishedActivity extends Activity {
 				mController.openShare(PotteryFinishedActivity.this, false);
 			}
 		});
-		collect = (ToggleButton) findViewById(R.id.take_photo);
+		collect = (ImageButton) findViewById(R.id.take_photo);
+		
 		if (fileName != null) {
-			collect.setChecked(true);
+			collect.setTag(true);
+			collect.setImageResource(R.drawable.collect_press);
+		}else{
+			collect.setTag(false);
+			collect.setImageResource(R.drawable.collect_normal);
 		}
-		collect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		
+		collect.setOnClickListener(new OnClickListener() {
 			
-
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
+			public void onClick(View v) {
+				boolean isChecked = (boolean) v.getTag();
+				if (!isChecked) {
 					toast = Toast.makeText(PotteryFinishedActivity.this, "正在收藏...", Toast.LENGTH_LONG);
 					toast.show();
 					saveCollect();
+					((ImageButton)v).setBackgroundResource(R.drawable.collect_press);
 				}else{
 					deleteCollect();
 					Toast.makeText(PotteryFinishedActivity.this,"已移除收藏", Toast.LENGTH_SHORT).show();		
+					((ImageButton)v).setBackgroundResource(R.drawable.collect_normal);
 				}
+				v.setTag(!isChecked);
 			}
-
-			
 		});
-		
 	
 		final ImageView width = (ImageView) findViewById(R.id.width);
 		int widthF = (int) GLManager.pottery.getMaxWidth();
@@ -226,7 +241,7 @@ public class PotteryFinishedActivity extends Activity {
 		float minH2 = heightF * 0.8f;
 		minHeight = Math.max(minH, minH2);
 		
-		final SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
+		seekBar = (SeekBar) findViewById(R.id.seekBar1);
 		int oldProgress = (int) ((heightF-minHeight)/(maxHeight - minHeight)*100);
 		seekBar.setProgress(oldProgress);
 		
@@ -258,28 +273,37 @@ public class PotteryFinishedActivity extends Activity {
 			}
 		});
 		
-		final View menuBar = findViewById(R.id.menu_bar);
-		final View inf = findViewById(R.id.potteryinf);
+		menuBar = findViewById(R.id.menu_bar);
+		inf = findViewById(R.id.potteryinf);
 		
-		final View complete = findViewById(R.id.next);
+		complete = findViewById(R.id.next);
 		complete.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				menuBar.setVisibility(View.VISIBLE);
-				inf.setVisibility(View.VISIBLE);
-				seekBar.setVisibility(View.VISIBLE);
-				complete.setVisibility(View.GONE);
-				
-				menuBar.animate().alpha(1).setDuration(500).start();
-				inf.animate().alpha(1).setDuration(500).start();
-				seekBar.animate().alpha(1).setDuration(500).start();
-				complete.animate().alpha(0).setDuration(500).start();
-				
-				GLManager.rotateSpeed = 0.0f;
+				complete(seekBar, menuBar, inf, complete);
 			}
+
 		});
+		if (from != null) {
+			complete(seekBar, menuBar, inf, complete);
+		}
 		
+	}
+	
+	private void complete(final SeekBar seekBar, final View menuBar,
+			final View inf, final View complete) {
+		menuBar.setVisibility(View.VISIBLE);
+		inf.setVisibility(View.VISIBLE);
+		seekBar.setVisibility(View.VISIBLE);
+		complete.setVisibility(View.GONE);
+
+		menuBar.animate().alpha(1).setDuration(500).start();
+		inf.animate().alpha(1).setDuration(500).start();
+		seekBar.animate().alpha(1).setDuration(500).start();
+		complete.animate().alpha(0).setDuration(500).start();
+
+		GLManager.rotateSpeed = 0.0f;
 	}
 	
 	private float minHeight;
@@ -336,8 +360,8 @@ public class PotteryFinishedActivity extends Activity {
 		super.onResume();
 		glView.onResume();
 		glView.setMode(WTMode.INTERACT_VIEW);
+		
 		GLManager.setEyeOffset(0.0f);
-		GLManager.rotateSpeed = 0.01f;
 		GLManager.mode = WTMode.INTERACT_VIEW;
 		GLManager.pottery.switchShader(Pottery200.CI);
 		GLManager.table.switchShader(Table200.COMMON);

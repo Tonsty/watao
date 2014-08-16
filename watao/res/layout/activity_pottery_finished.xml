@@ -30,9 +30,10 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/homepage"
+            android:background="@null"
             android:contentDescription="@null"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/homepage" />
 
         <ImageButton
             android:id="@+id/share_button"
@@ -40,9 +41,10 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="@drawable/share"
+            android:background="@null"
             android:contentDescription="@null"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/share" />
 
         <ImageButton
             android:id="@+id/buy_button"
@@ -50,21 +52,23 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="@drawable/buy"
+            android:background="@null"
             android:contentDescription="@null"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/buy" />
 
-        <ToggleButton
+        <ImageButton
             android:id="@+id/take_photo"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="@drawable/collect_button"
+            android:background="@null"
+            android:button="@drawable/collect_button"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            android:textOff="@null"
-            android:textOn="@null" />
+            android:src="@drawable/collect_button" />
+
     </LinearLayout>
 
     <LinearLayout

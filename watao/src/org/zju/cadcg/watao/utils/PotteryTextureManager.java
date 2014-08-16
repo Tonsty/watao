@@ -164,7 +164,7 @@ public class PotteryTextureManager {
 				float y = pattern.heightf + pattern.topf;
 				float[] src = new float[]{0,0,tempTexture.getWidth(),0,tempTexture.getWidth(), tempTexture.getHeight(),0,tempTexture.getHeight()};
 				float[] dst = null;
-				dst = new float[]{0,pattern.topf, textureHeight_PIX, pattern.topf, textureHeight_PIX, y, 0 , y};
+				dst = new float[]{0,pattern.topf, textureWidth_PIX, pattern.topf, textureWidth_PIX, y, 0 , y};
 				myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
 				canvas.drawBitmap(tempTexture, myMatrix, null);
 			}
@@ -324,7 +324,7 @@ public class PotteryTextureManager {
 						float[] src = new float[]{0,0,decorator.getWidth(),0,decorator.getWidth(), decorator.getHeight(),0,decorator.getHeight()};
 						float y = dstHeight + drawtopf;
 						float[] dst = null;
-						dst = new float[]{0,drawtopf, textureHeight_PIX, drawtopf, textureHeight_PIX, y, 0 , y};
+						dst = new float[]{0,drawtopf, textureWidth_PIX, drawtopf, textureWidth_PIX, y, 0 , y};
 						myMatrix.setPolyToPoly(src, 0, dst, 0, 4);
 						canvas.drawBitmap(decorator, myMatrix, null);
 					}
