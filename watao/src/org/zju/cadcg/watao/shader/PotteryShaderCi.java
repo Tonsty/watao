@@ -17,8 +17,8 @@ public class PotteryShaderCi extends PotteryShader{
 	private static final float[] specularL2 = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
 
 	//material parameter
-	private static final float[] ambientM = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
-	private static final float[] diffuseM = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
+	private static final float[] ambientM = new float[]{0.5f, 0.5f, 0.53f, 1.0f};
+	private static final float[] diffuseM = new float[]{0.5f, 0.55f, 0.65f, 1.0f};
 	private static final float[] specularM = new float[]{0.7f, 0.7f, 0.7f, 1.0f};
 	private static final float shininess = 50.0f;
 	
