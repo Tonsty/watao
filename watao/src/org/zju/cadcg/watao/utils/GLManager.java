@@ -46,6 +46,7 @@ public class GLManager {
 	private static Thread rotateThread;
 	public static int hasUncomplete;
 	public static int decoratorTypeUn;
+	public static int direct = 0;
 	
 	public static void initForGL(){
 		WTShader.initForAllShader();
@@ -238,14 +239,23 @@ public class GLManager {
 			float deltaY = currentY - lastY;
 			if (Math.abs(deltaX) > Math.abs(deltaY)) {
 				float y = computerYInPottery(currentY, height);
-				if (currentX > width * 0.5f && deltaX > 0
+				if (direct == 0) {
+					if (currentX > width * 0.5f && deltaX > 0
 						|| currentX < width * 0.5f && deltaX < 0) {
-					pottery.fatter(y);
+						pottery.fatter(y);
+						direct = 1;
+					}
+					if (currentX < width * 0.5f && deltaX > 0
+							|| currentX > width * 0.5f && deltaX < 0) {
+						pottery.thinner(y);
+						direct = -1;
+					}
+				}else if(direct == -1){
+						pottery.thinner(y);
+				}else{
+						pottery.fatter(y);
 				}
-				if (currentX < width * 0.5f && deltaX > 0
-						|| currentX > width * 0.5f && deltaX < 0) {
-					pottery.thinner(y);
-				}
+
 			} else {
 				if (deltaY < -3) {
 					pottery.taller();

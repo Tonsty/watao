@@ -47,14 +47,17 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -80,7 +83,15 @@ public class DecorateActivity extends Activity {
 		boolean isFirst = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isDecorateFirst", true);
 //		isFirst = true;
 		if (isFirst) {
-			ClassicDialog progressDialog = new ClassicDialog(this, R.layout.zuohua);
+			final ClassicDialog progressDialog = new ClassicDialog(this, R.layout.zuohua);
+			progressDialog.findViewById(R.id.root).setOnTouchListener(new OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1) {
+					progressDialog.dismiss();
+					return false;
+				}
+			});
 			android.view.WindowManager.LayoutParams params = progressDialog.getWindow().getAttributes();  
 			params.y = 0;
 			params.gravity = Gravity.TOP;
@@ -130,7 +141,6 @@ public class DecorateActivity extends Activity {
 				}
 			}
 		});
-		
 		
 		eraseButton = (ToggleButton)findViewById(R.id.erase);
 		eraseButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -197,6 +207,7 @@ public class DecorateActivity extends Activity {
 	public void startFire(final int wendu){
 		new AsyncTask<URL, Integer, String>(){
 			CustomProgressDialog progressDialog = new CustomProgressDialog(DecorateActivity.this, wendu);
+			private float oldSpeed = 0f;
 			
 			@Override
 			protected void onPreExecute() {
@@ -210,8 +221,6 @@ public class DecorateActivity extends Activity {
 				params.y = 100;  
 				params.gravity = Gravity.TOP;  
 				progressDialog.getWindow().setAttributes(params); 
-
-				
 				//set progressdialog content
 				progressDialog.setTitle("正在烧制...");
 				progressDialog.setCancelable(false);
@@ -226,6 +235,8 @@ public class DecorateActivity extends Activity {
 				if (potteryType == QINGHUA) {
 					GLManager.table.setTexture(DecorateActivity.this, R.drawable.table);
 				}
+				oldSpeed = GLManager.rotateSpeed;
+				GLManager.rotateSpeed = 0;
 			}
 
 			@Override
@@ -323,6 +334,7 @@ public class DecorateActivity extends Activity {
 						startActivity(intent);
 						DecorateActivity.this.overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
 					}
+				    GLManager.rotateSpeed = oldSpeed;
 				}
 				Watao.pauseBGM();
 			};
@@ -561,7 +573,7 @@ public class DecorateActivity extends Activity {
 	
 	private static List<String> customerId = new ArrayList<String>();
 	
-	List<ImageView> decoratorViews = new ArrayList<ImageView>(); 
+	List<RelativeLayout> decoratorViews = new ArrayList<RelativeLayout>(); 
 	ImageView currentView;
 	
 
@@ -589,7 +601,7 @@ public class DecorateActivity extends Activity {
 				decorator.idBefore = id;
 				decorator.setWidth(0.6f);
 
-				ImageView decoratorImageView = decoratorViews.get(i);
+				ImageView decoratorImageView = (ImageView) decoratorViews.get(i).findViewById(R.id.d);
 				changeImageView(decoratorImageView, decorator);
 			}
 			
@@ -597,7 +609,7 @@ public class DecorateActivity extends Activity {
 				switchDecorate(decoratorViews.get(0));
 			}
 			
-			ImageView view = decoratorViews.get(i++);
+			ImageView view = (ImageView) decoratorViews.get(i++).findViewById(R.id.d);
 			view.setImageResource(R.drawable.plus);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
@@ -658,7 +670,7 @@ public class DecorateActivity extends Activity {
 			decorator.setWidth(decorateWidth[i]);
 			decorator.idAfter = decorateResourceAfterId[i].toString();
 			decorator.idBefore = decorateResourceBeforeId[i].toString();
-			changeImageView(decoratorViews.get(i),decorator);
+			changeImageView((ImageView) decoratorViews.get(i).findViewById(R.id.d),decorator);
 		}	
 
 		for (; i < decoratorViews.size(); ++i) {
@@ -707,7 +719,7 @@ public class DecorateActivity extends Activity {
 			bitmap2.recycle();
 			customerId.add(id);
 
-			ImageView decoratorImageView = decoratorViews.get(customerId.size() - 1);
+			ImageView decoratorImageView = (ImageView) decoratorViews.get(customerId.size() - 1).findViewById(R.id.d);
 			WTDecorator decorator = new WTDecorator();
 			decorator.idAfter = decorator.idBefore = id;
 			decorator.setWidth(0.725f);
@@ -717,7 +729,7 @@ public class DecorateActivity extends Activity {
 			System.out.println("set current decorate " + decorator.toString());
 			PotteryTextureManager.currentDecorater = decorator;
 
-			ImageView view = decoratorViews.get(customerId.size());
+			ImageView view = (ImageView) decoratorViews.get(customerId.size()).findViewById(R.id.d);
 			view.setImageResource(R.drawable.plus);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
@@ -736,7 +748,7 @@ public class DecorateActivity extends Activity {
 			int avialableImageView) {
 		if (needImageView > avialableImageView) {
 			for (int i = 0; i < needImageView - avialableImageView; ++i) {
-				ImageView view = (ImageView) getLayoutInflater().inflate(R.layout.decorate_image, decoratorDisplayView, false);
+				RelativeLayout view = (RelativeLayout) getLayoutInflater().inflate(R.layout.decorate_image, decoratorDisplayView, false);
 				decoratorDisplayView.addView(view);
 				decoratorViews.add(view);
 			}
@@ -763,11 +775,11 @@ public class DecorateActivity extends Activity {
 		});
 	}
 	
-	private void switchDecorate(View v) {
+	private void switchDecorate(View view) {
+		View v = view.findViewById(R.id.d);
 		if (eraseButton != null) {
 			eraseButton.setChecked(false);
 		}
-		System.out.println("set current decorate switch " + v.getTag().toString());
 		PotteryTextureManager.currentDecorater = (WTDecorator)v.getTag();
 		if (currentView != null) {
 			currentView.setBackgroundResource(R.drawable.decorate_block);

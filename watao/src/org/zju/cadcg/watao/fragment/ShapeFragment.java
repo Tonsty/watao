@@ -328,9 +328,9 @@ public class ShapeFragment extends Fragment {
 				shapeMenuBarAnimator.addUpdateListener(new AnimatorUpdateListener() {
 					@Override
 					public void onAnimationUpdate(ValueAnimator animation) {
-						shapeMenuBar.setAlpha((float) animation.getAnimatedValue());
+						shapeMenuBar.setAlpha((Float) animation.getAnimatedValue());
 						shapeMenuBar.requestLayout();
-						nextButton.setAlpha((float) animation.getAnimatedValue());
+						nextButton.setAlpha((Float) animation.getAnimatedValue());
 						nextButton.requestLayout();
 					}
 				});
@@ -379,7 +379,15 @@ public class ShapeFragment extends Fragment {
 	private void showClassic() {
 		boolean isFirst = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("isClassicFirst", true);
 		if (isFirst) {
-			ClassicDialog progressDialog = new ClassicDialog(getActivity(), R.layout.shanghua);
+			final ClassicDialog progressDialog = new ClassicDialog(getActivity(), R.layout.shanghua);
+			progressDialog.findViewById(R.id.root).setOnTouchListener(new OnTouchListener() {
+				
+				@Override
+				public boolean onTouch(View arg0, MotionEvent arg1) {
+					progressDialog.dismiss();
+					return false;
+				}
+			});
 			progressDialog.show();
 			PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("isClassicFirst", false).commit();
 		}
@@ -596,9 +604,9 @@ public class ShapeFragment extends Fragment {
 		shapeMenuBarAnimator.addUpdateListener(new AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
-				shapeMenuBar.setAlpha((float) animation.getAnimatedValue());
+				shapeMenuBar.setAlpha((Float) animation.getAnimatedValue());
 				shapeMenuBar.requestLayout();
-				nextButton.setAlpha((float) animation.getAnimatedValue());
+				nextButton.setAlpha((Float) animation.getAnimatedValue());
 				nextButton.requestLayout();
 			}
 		});

@@ -1,3 +1,4 @@
+
 package org.zju.cadcg.watao.gl;
 
 import org.zju.cadcg.watao.R;
@@ -144,6 +145,7 @@ public class GLView extends GLSurfaceView {
 							deltaX /= 2;
 							deltaY /= 2;
 						}
+						GLManager.direct = 0;
 					}
 				}).start();
 			}

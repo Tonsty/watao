@@ -95,7 +95,7 @@ public class Pottery200 extends Pottery{
 		shader.setVertexAttributeOffset(vertexBufferOffset, normalBufferOffset, texCoordBufferOffset);
 		
 		shader.reloadModelMatrix();
-		shader.translate(0f, -1.9f, -6.4f);
+		shader.translate(0f, -1.85f, -6.4f);
 		shader.rotate(angleForSensor, 1.0f, 0.0f, 0.0f);
 		shader.rotate(angleForRotate, 0f, 1f, 0f);
         PotteryTextureManager.loadTexture();
@@ -194,7 +194,7 @@ public class Pottery200 extends Pottery{
 		float max = 0f;
 		for (int i = 0; i < radiuses.length; ++i) {
 			float f = radiuses[i] * radio;
-			if (f > radiusesMax || f < radiusesMin) {
+			if (f > radiusesMax || f < radiusesMin[i]) {
 				return 0;
 			}
 			temp[i] = f;

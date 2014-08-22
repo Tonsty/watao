@@ -74,7 +74,7 @@ public class PotteryFinishedActivity extends Activity {
 	
 		initUI();
 		initUMeng();
-		GLManager.rotateSpeed = 0.01f;
+		GLManager.rotateSpeed = 0.006f;
 	}
 
 	private Bitmap image;
@@ -145,7 +145,7 @@ public class PotteryFinishedActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				if (!(boolean)collect.getTag() && from == null) {
+				if (!(Boolean)collect.getTag() && from == null) {
 					new AlertDialog.Builder(PotteryFinishedActivity.this).setMessage("作品尚未收藏，是否继续？").setPositiveButton("是", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -205,7 +205,7 @@ public class PotteryFinishedActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				boolean isChecked = (boolean) v.getTag();
+				boolean isChecked = (Boolean) v.getTag();
 				if (!isChecked) {
 					toast = Toast.makeText(PotteryFinishedActivity.this, "正在收藏...", Toast.LENGTH_LONG);
 					toast.show();

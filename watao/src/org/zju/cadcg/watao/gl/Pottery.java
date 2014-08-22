@@ -31,7 +31,13 @@ public class Pottery extends GLMeshObject{
 	}
 
 	public float radiusesMax = 1.0625f;
-	protected float radiusesMin = 0.1875f;
+	protected float[] radiusesMin = new float[VERTICAL_PRICISION];
+	{
+		for (int i = 0; i < 50; i++){
+			radiusesMin[i] = 0.38f - ((float)i) / 50 * 0.19f;
+		}
+	}
+//	protected float radiusesMin = 0.1875f;
 	
 	protected float angleForSensor = 0.0f;
 	protected float angleForRotate = 0.0f;
@@ -131,9 +137,16 @@ public class Pottery extends GLMeshObject{
 			}
 		}
 		int length = normals.length;
-		normals[length - 1] = 0;
-		normals[length - 2] = 1;
-		normals[length - 3] = 0;
+		normals[length - 1] = z;
+		normals[length - 2] = y;
+		normals[length - 3] = x;
+		int i = 2*VERTICAL_PRICISION - 1;
+		for( int j = 0; j < HORIZONAL_PRICISION + 1; j++ ){
+			int offset = (i*(HORIZONAL_PRICISION + 1) + j)*3;
+			normals[offset] = x;
+			normals[offset + 1] = y;
+			normals[offset + 2] = z;
+		}
 	}
 	
 	
@@ -150,8 +163,8 @@ public class Pottery extends GLMeshObject{
 		}
 		
 		int length = texCoords.length;
-		texCoords[length - 2] = 0.5f;
-		texCoords[length - 1] = 0.999f;
+		texCoords[length - 2] = 0f;
+		texCoords[length - 1] = 0f;
 	}
 	
 	public void genIndices(){
@@ -169,9 +182,10 @@ public class Pottery extends GLMeshObject{
 		}
 		
 		int offset = (2 * VERTICAL_PRICISION - 1) * HORIZONAL_PRICISION * 6;
+		int base = (2 * VERTICAL_PRICISION - 1)*HORIZONAL_PRICISION;
 		for(int j = 0; j < HORIZONAL_PRICISION; ++j){
-			indices[offset + j * 3] = (short) j;
-			indices[offset + j * 3 + 2] = (short) (j + 1);
+			indices[offset + j * 3] = (short) (j + base);
+			indices[offset + j * 3 + 2] = (short) ((j + 1 ) % HORIZONAL_PRICISION + base);
 			indices[offset + j * 3 + 1] = (short) (vertices.length / 3 - 1);
 		}
 	}
@@ -350,7 +364,7 @@ public class Pottery extends GLMeshObject{
 	
 	private void changeBasesThinner(float y, float mean,float delta) {
 		for( int i = 0; i < VERTICAL_PRICISION; i++ ){
-			float temp = (float) Math.atan((radiuses[i] - radiusesMin)) * 2.0f / (float) Math.PI;
+			float temp = (float) Math.atan((radiuses[i] - radiusesMin[i])) * 2.0f / (float) Math.PI;
 			radiuses[i] = radiuses[i] - temp * hspeed * gaussian(delta, mean, (float)i / VERTICAL_PRICISION * currentHeight - y );
 		}
 	}
@@ -404,6 +418,7 @@ public class Pottery extends GLMeshObject{
 	}
 	
 	public void fastEstimateNormals() {
+
 		for( int i = 0; i < 2*VERTICAL_PRICISION; i++ ){
 			vec3 normal = new vec3();
 			if(i == VERTICAL_PRICISION - 1 || i == VERTICAL_PRICISION){
@@ -489,68 +504,79 @@ public class Pottery extends GLMeshObject{
 				}
 			}
 		}	
+		int i = 2*VERTICAL_PRICISION - 1;
+		for( int j = 0; j < HORIZONAL_PRICISION + 1; j++ ){
+			int offset = (i*(HORIZONAL_PRICISION + 1) + j)*3;
+			normals[offset] = x;
+			normals[offset + 1] = y;
+			normals[offset + 2] = z;
+		}
 	}
-	@Override
-	public void estimateNormals() {
-		for( int i = 0; i < 2*VERTICAL_PRICISION; i++ ){
-			for(int j = 0; j < HORIZONAL_PRICISION; ++j){
-				vec3 p1 = null, p2 = null, p3 = null, p4 = null;
-				if (i == 0 || i == VERTICAL_PRICISION) {
-					int offsetP1 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
-					p1 = new vec3(vertices[offsetP1], vertices[offsetP1 + 1], vertices[offsetP1 + 2]);
-					
-					int offsetP2 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
-					p2 = new vec3(vertices[offsetP2], vertices[offsetP2 + 1], vertices[offsetP2 + 2]);
-					
-					int offsetP3 = (i * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
-					p3 = new vec3(vertices[offsetP3], vertices[offsetP3 + 1], vertices[offsetP3 + 2]);
-					
-					int offsetP4 = (i * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
-					p4 = new vec3(vertices[offsetP4], vertices[offsetP4 + 1], vertices[offsetP4 + 2]);
-				}else if(i == VERTICAL_PRICISION - 1 || i == 2 * VERTICAL_PRICISION - 1){
-					int offsetP1 = (i * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
-					p1 = new vec3(vertices[offsetP1], vertices[offsetP1 + 1], vertices[offsetP1 + 2]);
-					
-					int offsetP2 = (i * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
-					p2 = new vec3(vertices[offsetP2], vertices[offsetP2 + 1], vertices[offsetP2 + 2]);
-					
-					int offsetP3 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
-					p3 = new vec3(vertices[offsetP3], vertices[offsetP3 + 1], vertices[offsetP3 + 2]);
-					
-					int offsetP4 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
-					p4 = new vec3(vertices[offsetP4], vertices[offsetP4 + 1], vertices[offsetP4 + 2]);
-				}else{
-					int offsetP1 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
-					p1 = new vec3(vertices[offsetP1], vertices[offsetP1 + 1], vertices[offsetP1 + 2]);
-					
-					int offsetP2 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
-					p2 = new vec3(vertices[offsetP2], vertices[offsetP2 + 1], vertices[offsetP2 + 2]);
-					
-					int offsetP3 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
-					p3 = new vec3(vertices[offsetP3], vertices[offsetP3 + 1], vertices[offsetP3 + 2]);
-					
-					int offsetP4 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
-					p4 = new vec3(vertices[offsetP4], vertices[offsetP4 + 1], vertices[offsetP4 + 2]);
-				}
-				
-				vec3 v1 = new vec3(p1, p4);
-				vec3 v2 = new vec3(p3, p2);
-				
-				vec3 normal = v2.crossProduct(v1);
-				normal.normalize();
-				
-				int offset = (i*(HORIZONAL_PRICISION + 1) + j)*3;
-				normals[offset] = normal.x;
-				normals[offset + 1] = normal.y;
-				normals[offset + 2] = normal.z;
-			}
-			int offset = (i*(HORIZONAL_PRICISION + 1) + HORIZONAL_PRICISION)*3;
-			int offsetBegin = i*(HORIZONAL_PRICISION + 1)*3; 
-			normals[offset] = normals[offsetBegin];
-			normals[offset + 1] = normals[offsetBegin + 1];
-			normals[offset + 2] = normals[offsetBegin + 2];
-		}	
-	}
+	private static final float x = 0f;
+	private static final float y = -1f;
+	private static final float z = 0f;
+//	@Override
+	
+//	public void estimateNormals() {
+//		for( int i = 0; i < 2*VERTICAL_PRICISION; i++ ){
+//			for(int j = 0; j < HORIZONAL_PRICISION; ++j){
+//				vec3 p1 = null, p2 = null, p3 = null, p4 = null;
+//				if (i == 0 || i == VERTICAL_PRICISION) {
+//					int offsetP1 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
+//					p1 = new vec3(vertices[offsetP1], vertices[offsetP1 + 1], vertices[offsetP1 + 2]);
+//					
+//					int offsetP2 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
+//					p2 = new vec3(vertices[offsetP2], vertices[offsetP2 + 1], vertices[offsetP2 + 2]);
+//					
+//					int offsetP3 = (i * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
+//					p3 = new vec3(vertices[offsetP3], vertices[offsetP3 + 1], vertices[offsetP3 + 2]);
+//					
+//					int offsetP4 = (i * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
+//					p4 = new vec3(vertices[offsetP4], vertices[offsetP4 + 1], vertices[offsetP4 + 2]);
+//				}else if(i == VERTICAL_PRICISION - 1 || i == 2 * VERTICAL_PRICISION - 1){
+//					int offsetP1 = (i * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
+//					p1 = new vec3(vertices[offsetP1], vertices[offsetP1 + 1], vertices[offsetP1 + 2]);
+//					
+//					int offsetP2 = (i * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
+//					p2 = new vec3(vertices[offsetP2], vertices[offsetP2 + 1], vertices[offsetP2 + 2]);
+//					
+//					int offsetP3 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
+//					p3 = new vec3(vertices[offsetP3], vertices[offsetP3 + 1], vertices[offsetP3 + 2]);
+//					
+//					int offsetP4 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
+//					p4 = new vec3(vertices[offsetP4], vertices[offsetP4 + 1], vertices[offsetP4 + 2]);
+//				}else{
+//					int offsetP1 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
+//					p1 = new vec3(vertices[offsetP1], vertices[offsetP1 + 1], vertices[offsetP1 + 2]);
+//					
+//					int offsetP2 = ((i + 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
+//					p2 = new vec3(vertices[offsetP2], vertices[offsetP2 + 1], vertices[offsetP2 + 2]);
+//					
+//					int offsetP3 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j - 1 + HORIZONAL_PRICISION) % HORIZONAL_PRICISION) * 3;
+//					p3 = new vec3(vertices[offsetP3], vertices[offsetP3 + 1], vertices[offsetP3 + 2]);
+//					
+//					int offsetP4 = ((i - 1) * (HORIZONAL_PRICISION + 1) + (j + 1) % HORIZONAL_PRICISION) * 3;
+//					p4 = new vec3(vertices[offsetP4], vertices[offsetP4 + 1], vertices[offsetP4 + 2]);
+//				}
+//				
+//				vec3 v1 = new vec3(p1, p4);
+//				vec3 v2 = new vec3(p3, p2);
+//				
+//				vec3 normal = v2.crossProduct(v1);
+//				normal.normalize();
+//				
+//				int offset = (i*(HORIZONAL_PRICISION + 1) + j)*3;
+//				normals[offset] = normal.x;
+//				normals[offset + 1] = normal.y;
+//				normals[offset + 2] = normal.z;
+//			}
+//			int offset = (i*(HORIZONAL_PRICISION + 1) + HORIZONAL_PRICISION)*3;
+//			int offsetBegin = i*(HORIZONAL_PRICISION + 1)*3; 
+//			normals[offset] = normals[offsetBegin];
+//			normals[offset + 1] = normals[offsetBegin + 1];
+//			normals[offset + 2] = normals[offsetBegin + 2];
+//		}	
+//	}
 
 	public void setAngleRotateY(float potteryCurrentAngleRotateX) {
 		this.angleForSensor = potteryCurrentAngleRotateX;
