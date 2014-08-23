@@ -1,9 +1,5 @@
 package org.zju.cadcg.watao.type;
 
-import android.graphics.Bitmap;
-
-
-
 public class WTDecorator extends WTObject {
 
 	/**
@@ -13,6 +9,9 @@ public class WTDecorator extends WTObject {
 	
 	private String url;
 	private float price;
+	public void setPrice(float price) {
+		this.price = price;
+	}
 	private float width;
 	public int temp;
 	public String idAfter;
@@ -22,13 +21,11 @@ public class WTDecorator extends WTObject {
 	 */
 	private int type;
 
-	
-
 	public String getUrl() {
 		return url;
 	}
-	public float getPrice() {
-		return price;
+	public int getPrice() {
+		return (int) price;
 	}
 	public int getType() {
 		return type;

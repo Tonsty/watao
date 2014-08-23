@@ -688,4 +688,12 @@ public class Pottery extends GLMeshObject{
 	public float getHeightReal(){
 		return currentHeight * 8;
 	}
+	
+	public float getMidRadiu(){
+		float total = 0;
+		for (float r : radiuses) {
+			total += r;
+		}
+		return total / radiuses.length;
+	}
 }

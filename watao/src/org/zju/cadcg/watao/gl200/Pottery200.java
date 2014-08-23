@@ -216,5 +216,38 @@ public class Pottery200 extends Pottery{
 		}
 		return total/(i - j);
 	}
+
+	public static final int NEI = 1;
+	public static final int WAI = -1;
+	public float getPriceR() {
+		int direct = 0;
+		if (radiuses[0] > radiuses[1]) {
+			direct = NEI;
+		}else{
+			direct = WAI;
+		}
+		int lastIndex = 1;
+		int count = 0;
+		for (int i = 2; i < radiuses.length; i++) {
+			int tempDirect = 0;
+			if (radiuses[i - 1] > radiuses[i]) {
+				tempDirect = NEI;
+			}else{
+				tempDirect = WAI;
+			}
+			if (tempDirect != direct) {
+				if (Math.abs(radiuses[i] - radiuses[lastIndex]) > radiusesMax * 0.5f) {
+					count ++;
+				}
+				direct = tempDirect;
+				lastIndex = i;
+			}
+		}
+		if (count > 3) {
+			return 1.6f;
+		}else{
+			return 1f;
+		}
+	}
 }
 

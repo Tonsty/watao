@@ -408,8 +408,15 @@ public class GLManager {
 		}
 	}
 
-	public static float getPrice() {
-		return 89.9f;
+	public static int getPrice() {
+		float result = 0;
+		float tiji = (float) ((GLManager.pottery.getHeight() * 8) * (GLManager.pottery.getMidRadiu() * 8) * (GLManager.pottery.getMidRadiu() * 8) * Math.PI);
+		result += tiji / 150 * GLManager.pottery.getPriceR();
+		for (Pattern p : PotteryTextureManager.getPatterns().values()) {
+			result += p.price;
+		}
+		result += 30;
+		return (int)result;
 	}
 
 }

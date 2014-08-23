@@ -58,6 +58,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -547,28 +548,34 @@ public class DecorateActivity extends Activity {
 	public static Integer[] qdb = new Integer[]{R.drawable.qd17,R.drawable.qd23,R.drawable.qd335,R.drawable.qd438,R.drawable.qd545,R.drawable.qd63,R.drawable.qd74,R.drawable.qd84 ,R.drawable.qd95,R.drawable.qd1035};
 	public static Integer[] qda = new Integer[]{R.drawable.qd17a,R.drawable.qd23a,R.drawable.qd335a,R.drawable.qd438a,R.drawable.qd545a,R.drawable.qd63a,R.drawable.qd74a,R.drawable.qd84a ,R.drawable.qd95a,R.drawable.qd1035a};
 	public static Float[] qdw = new Float[]{0.875f,0.375f,0.4375f, 0.475f, 0.5625f, 0.375f,0.5f,0.5f,0.5f,0.4375f};
+	public static Integer[] qdp = new Integer[]{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 	
 	public static Integer[] qgb = new Integer[]{R.drawable.qg14,R.drawable.qg245,R.drawable.qg365,R.drawable.qg433,R.drawable.qg53,R.drawable.qg635, R.drawable.qg75};
 	public static Integer[] qga = new Integer[]{R.drawable.qg14a,R.drawable.qg245a,R.drawable.qg365a,R.drawable.qg433a,R.drawable.qg53a,R.drawable.qg635a, R.drawable.qg75a};
 	public static Float[] qgw = new Float[]{0.5f,0.375f,0.8125f, 0.4125f, 0.375f, 0.4375f, 0.625f};
+	public static Integer[] qgp = new Integer[]{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 	
 	public static Integer[] qcb = new Integer[]{R.drawable.qc13,R.drawable.qc225,R.drawable.qc31,R.drawable.qc44,R.drawable.qc54,R.drawable.qc63,R.drawable.qc718,R.drawable.qc818};
 	public static Integer[] qca = new Integer[]{R.drawable.qc13a,R.drawable.qc225a,R.drawable.qc31a,R.drawable.qc44a,R.drawable.qc54a,R.drawable.qc63a,R.drawable.qc718a,R.drawable.qc818a};
 	public static Float[] qcw = new Float[]{0.375f,0.3125f,0.125f, 0.5f, 0.5f,0.375f, 0.225f,0.225f};
+	public static Integer[] qcp = new Integer[]{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 	
 //	public static Integer[] youshang = new Integer[]{R.drawable.y1, R.drawable.y2, R.drawable.y3, R.drawable.y4, R.drawable.y543, R.drawable.y626};
 //	private Float[] youshangWidthId = new Float[]{0.2f,0.3f,0.1f,0.4f, 0.5375f, 0.325f};
 	public static Integer[] yd = new Integer[]{R.drawable.yd128,R.drawable.yd235,R.drawable.yd343,R.drawable.yd445,R.drawable.yd525,R.drawable.yd626,R.drawable.yd728,R.drawable.yd835,
 		R.drawable.yd935,R.drawable.yd103,R.drawable.yd1145,R.drawable.yd124,R.drawable.yd1326,R.drawable.yd1426,R.drawable.yd1535,R.drawable.yd164};
 	public static Float[] ydw =	new Float[]{0.35f,0.4375f,0.5375f, 0.5625f, 0.3125f, 0.325f, 0.35f, 0.4375f, 0.4375f, 0.375f, 0.5625f, 0.5f, 0.325f, 0.325f, 0.4375f, 0.5f};
+	public static Integer[] ydp = new Integer[]{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 	
 	public static Integer[] yg = new Integer[]{R.drawable.yg16,R.drawable.yg248,R.drawable.yg365,R.drawable.yg43,R.drawable.yg545,R.drawable.yg648,R.drawable.yg755,R.drawable.yg865,R.drawable.yg965,
 		R.drawable.yg1048,R.drawable.yg115,R.drawable.yg123,R.drawable.yg136,R.drawable.yg143};
 	public static Float[] ygw = new Float[]{0.75f, 0.6f, 0.8125f, 0.375f, 0.5625f, 0.6f, 0.6875f, 0.8125f, 0.8125f,0.6f, 0.625f, 0.375f, 0.75f, 0.375f};
+	public static Integer[] ygp = new Integer[]{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 	
 	public static Integer[] yc = new Integer[]{R.drawable.yc13,R.drawable.yc2,R.drawable.yc345,R.drawable.yc41,R.drawable.yc53,R.drawable.yc61,R.drawable.yc7,
 		R.drawable.yc805,R.drawable.yc918,R.drawable.yc1018};
 	public static Float[] ycw = new Float[]{0.375f, 0.05f, 0.5625f, 0.125f, 0.375f, 0.125f,0.05f, 0.0625f, 0.225f, 0.225f};
+	public static Integer[] ycp = new Integer[]{8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 	
 	
 	private static List<String> customerId = new ArrayList<String>();
@@ -626,6 +633,7 @@ public class DecorateActivity extends Activity {
 			return;		
 		}
 		
+		Integer[] price = null;
 		Float[] decorateWidth = null;
 		Object[] decorateResourceBeforeId = null;
 		Object[] decorateResourceAfterId = null;
@@ -634,30 +642,36 @@ public class DecorateActivity extends Activity {
 				decorateResourceBeforeId = qdb;
 				decorateResourceAfterId = qda;
 				decorateWidth = qdw;
+				price = qdp;
 			}else{
 				decorateResourceBeforeId = yd;
 				decorateResourceAfterId = yd;
 				decorateWidth = ydw;
+				price = ydp;
 			}
 		}else if(bw == WTDecorateTypeEnum.HUANRAO){
 			if (potteryType == DecorateActivity.QINGHUA) {
 				decorateResourceBeforeId = qgb;
 				decorateResourceAfterId = qga;
 				decorateWidth = qgw;
+				price = qgp;
 			}else{
 				decorateResourceBeforeId = yg;
 				decorateResourceAfterId = yg;
 				decorateWidth = ygw;
+				price = ygp;
 			}
 		}else if(bw == WTDecorateTypeEnum.CHONGFU){
 			if (potteryType == DecorateActivity.QINGHUA) {
 				decorateResourceBeforeId = qcb;
 				decorateResourceAfterId = qca;
 				decorateWidth = qcw;
+				price = qcp;
 			}else{
 				decorateResourceBeforeId = yc;
 				decorateResourceAfterId = yc;
 				decorateWidth = ycw;
+				price = ycp;
 			}
 		}
 		
@@ -670,8 +684,9 @@ public class DecorateActivity extends Activity {
 			decorator.setWidth(decorateWidth[i]);
 			decorator.idAfter = decorateResourceAfterId[i].toString();
 			decorator.idBefore = decorateResourceBeforeId[i].toString();
-			changeImageView((ImageView) decoratorViews.get(i).findViewById(R.id.d),decorator);
-		}	
+			decorator.setPrice(price[i]);
+			changeImageView(decoratorViews.get(i),decorator);
+		}
 
 		for (; i < decoratorViews.size(); ++i) {
 			decoratorViews.get(i).setVisibility(View.GONE);
@@ -756,8 +771,9 @@ public class DecorateActivity extends Activity {
 	}
 
 
-	private void changeImageView(ImageView decoratorImageView,
+	private void changeImageView(View view,
 			WTDecorator decorator) {
+		ImageView decoratorImageView = (ImageView) view.findViewById(R.id.d);
 		decoratorImageView.setVisibility(View.VISIBLE);
 		if (potteryType == QINGHUA) {
 			decoratorImageView.setImageBitmap(PotteryTextureManager.getPatternTexture(decorator.idBefore));
@@ -773,6 +789,8 @@ public class DecorateActivity extends Activity {
 			}
 			
 		});
+		TextView textView = (TextView) view.findViewById(R.id.d_textview);
+		textView.setText(String.valueOf(decorator.getPrice()) + "￥");
 	}
 	
 	private void switchDecorate(View view) {
