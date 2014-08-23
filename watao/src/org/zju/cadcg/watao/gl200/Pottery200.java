@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.text.BoringLayout;
 import android.util.Log;
 
 public class Pottery200 extends Pottery{
@@ -248,6 +249,21 @@ public class Pottery200 extends Pottery{
 		}else{
 			return 1f;
 		}
+	}
+
+	public int getCishu(int t, int b, float c) {
+		if (t > 49) {
+			t = 49;
+		}
+		if (b < 0) {
+			b = 0;
+		}
+		float temp = (float) ((radiuses[t] + radiuses[b]) * Math.PI);
+		int result = (int) (temp /c);
+		if (result == 0) {
+			result = 1;
+		}
+		return result;
 	}
 }
 

@@ -21,6 +21,8 @@ public class WTDecorator extends WTObject {
 	 */
 	private int type;
 
+	private float c;
+
 	public String getUrl() {
 		return url;
 	}
@@ -35,5 +37,11 @@ public class WTDecorator extends WTObject {
 	}
 	public void setWidth(float width){
 		this.width = width;
+	}
+	public void setC(float i) {
+		this.c = i;
+	}
+	public float getC(){
+		return c;
 	}
 }

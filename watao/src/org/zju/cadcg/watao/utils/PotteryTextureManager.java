@@ -154,9 +154,9 @@ public class PotteryTextureManager {
 			occupy(pattern.buttom, pattern.top, pattern);
 			Bitmap tempTexture = null;
 			if (isBefore) {
-				tempTexture = getPatternTexture(pattern.idBefore);
+				tempTexture = getPatternTexture(pattern.idBefore, pattern.c, true);
 			}else{
-				tempTexture = getPatternTexture(pattern.idAfter);
+				tempTexture = getPatternTexture(pattern.idAfter, pattern.c, true);
 			}
 
 			Matrix myMatrix = new Matrix();
@@ -174,9 +174,9 @@ public class PotteryTextureManager {
 			occupy(pattern.buttom, pattern.top, pattern);
 			Bitmap tempTexture = null;
 			if (isBefore) {
-				tempTexture = getPatternTexture(pattern.idBefore);
+				tempTexture = getPatternTexture(pattern.idBefore, pattern.c, true);
 			}else{
-				tempTexture = getPatternTexture(pattern.idAfter);
+				tempTexture = getPatternTexture(pattern.idAfter, pattern.c, true);
 			}
 
 			Matrix myMatrix = new Matrix();
@@ -225,7 +225,7 @@ public class PotteryTextureManager {
 	}
 	
 	
-	public static final void addTexture(int bottom, int top, Bitmap decorator, float price){
+	public static final void addTexture(int bottom, int top, Bitmap decorator, float price, int c){
 		synchronized (isTextureInvalid) {
 			Set<String> checkOccupied = checkOccupied(bottom,top);
 			int middleNewPattern = (bottom + top) / 2;	
@@ -278,7 +278,7 @@ public class PotteryTextureManager {
 			}
 			if(0 == checkOccupied.size()){
 				if(decorator != null){
-					Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP, price);
+					Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP, price, c);
 					patterns.put(pattern.idAfter + pattern.top, pattern);
 					occupy(bottom, top, pattern);
 					Matrix myMatrix = new Matrix();
@@ -337,7 +337,7 @@ public class PotteryTextureManager {
 				}
 			}else{
 				if(decorator != null){
-					Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP, price);
+					Pattern pattern = new Pattern(top, bottom, drawtopf, dstHeight, currentDecorater.idBefore, currentDecorater.idAfter, needP, price, c);
 					patterns.put(pattern.idAfter + pattern.top, pattern);
 					deletePattern(checkOccupied);
 					reloadPattern();
@@ -448,7 +448,7 @@ public class PotteryTextureManager {
 
 	public static void preDerocate_(int bottom, int top ) {
 		textureTempBackup = texture.copy(Bitmap.Config.ARGB_8888, true);
-		addTexture(bottom, top, null, 0);
+		addTexture(bottom, top, null, 0, 0);
 	}
 	
 	public static void tempDerocate_(int bottom, int top){
@@ -456,10 +456,10 @@ public class PotteryTextureManager {
 			return;
 		}
 		texture = textureTempBackup.copy(Bitmap.Config.ARGB_8888, true);
-		addTexture(bottom, top, null, 0);
+		addTexture(bottom, top, null, 0, 0);
 	}
 	
-	public static void finalDerocate_(int bottom, int top){
+	public static void finalDerocate_(int bottom, int top, int c){
 		if (textureTempBackup == null) {
 			return;
 		}
@@ -471,16 +471,27 @@ public class PotteryTextureManager {
 		}else{
 			currentId = currentDecorater.idAfter;
 		}
-		addTexture(bottom, top, getPatternTexture(currentId), currentDecorater.getPrice());
+		addTexture(bottom, top, getPatternTexture(currentId, c, true), currentDecorater.getPrice(), c);
 	}
 	
 	static Map<String,SoftReference<Bitmap>> texturePool = new HashMap<String, SoftReference<Bitmap>>();
-	public static Bitmap getPatternTexture(String id) {
+	public static Bitmap getPatternTexture(String id, int cishu, boolean needSave) {
 		Bitmap texture = null;
 		SoftReference<Bitmap> softReference = texturePool.get(id);
 		if (softReference == null || (texture = softReference.get()) == null) {
-			texture = getBitmapFromPatternId(id);
-			texturePool.put(id, new SoftReference<Bitmap>(texture));
+			Bitmap temp = getBitmapFromPatternId(id); 
+			texture = Bitmap.createBitmap(temp.getWidth() * cishu, temp.getHeight(), Config.ARGB_8888);
+			Canvas c = new Canvas(texture);
+			for (int i = 0; i < cishu; i++) {
+				c.drawBitmap(temp, i * temp.getWidth(), 0, null);
+			}
+			temp.recycle();
+			temp = null;
+			c.save(Canvas.ALL_SAVE_FLAG);
+			c.restore();
+			if (needSave) {
+				texturePool.put(id, new SoftReference<Bitmap>(texture));
+			}
 		}
 		return texture;
 	}
@@ -521,8 +532,9 @@ public class PotteryTextureManager {
 		public String idBefore;
 		public boolean needP;
 		public float price;
+		public int c;
 		
-		public Pattern(int top,int buttom,float topf, int heightf, String idBefore, String idAfter, boolean needP,float price) {
+		public Pattern(int top,int buttom,float topf, int heightf, String idBefore, String idAfter, boolean needP,float price, int c) {
 			this.top = top;
 			this.buttom = buttom;
 			this.topf = topf;
@@ -531,6 +543,7 @@ public class PotteryTextureManager {
 			this.idBefore = idBefore;
 			this.needP = needP;
 			this.price = price;
+			this.c = c;
 		}
 		
 		public static List<Integer> usedId;
@@ -567,7 +580,8 @@ public class PotteryTextureManager {
 		}
 		
 		int[] border = computerBorder(yInPottery, currentDecorater.getWidth(), GLManager.pottery.getHeight());
-		finalDerocate_(border[0], border[1]);
+		int c = GLManager.pottery.getCishu(border[1]/10, border[0]/10, currentDecorater.getC());
+		finalDerocate_(border[0], border[1], c);
 	}
 	
 	static private int[] computerBorder(float yInPottery, float width, float height) {
